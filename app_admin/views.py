@@ -920,13 +920,13 @@ def admin_center_menu(request):
             "icon": "layui-icon layui-icon-templeate-1",
             "href": reverse('doctemp_manage'),
         },
-        {
-            "id": 5,
-            "title": "注册码管理",
-            "type": 1,
-            "icon": "layui-icon layui-icon-component",
-            "href": reverse('register_code_manage'),
-        },
+        # {
+        #     "id": 5,
+        #     "title": "注册码管理",
+        #     "type": 1,
+        #     "icon": "layui-icon layui-icon-component",
+        #     "href": reverse('register_code_manage'),
+        # },
         {
             "id": 6,
             "title": "用户管理",
