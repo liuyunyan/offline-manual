@@ -169,36 +169,34 @@ def project_list(request):
             Q(role=2,role_value__contains=str(request.user.username)) | \
             Q(create_user=request.user) | \
             Q(id__in=colla_list)
-        ).order_by('-is_top',"{}create_time".format(sort_str))
+        ).order_by("{}create_time".format(sort_str))
 
     # 没有搜索 and 认证用户 and 有筛选
     elif (is_kw is False ) and (is_auth) and (is_role):
         if role in ['0',0]:
-            project_list = Project.objects.filter(role=0).order_by('-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(role=0).order_by("{}create_time".format(sort_str))
         elif role in ['1',1]:
-            project_list = Project.objects.filter(create_user=request.user,role=1).order_by(
-                '-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(create_user=request.user,role=1).order_by("{}create_time".format(sort_str))
         elif role in ['2',2]:
-            project_list = Project.objects.filter(role=2,role_value__contains=str(request.user.username)).order_by(
-                '-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(role=2,role_value__contains=str(request.user.username)).order_by("{}create_time".format(sort_str))
         elif role in ['3',3]:
-            project_list = Project.objects.filter(role=3).order_by('-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(role=3).order_by("{}create_time".format(sort_str))
         elif role in ['99',99]:
             colla_list = [i.project.id for i in ProjectCollaborator.objects.filter(user=request.user)] # 用户的协作文集列表
-            project_list = Project.objects.filter(id__in=colla_list).order_by('-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(id__in=colla_list).order_by("{}create_time".format(sort_str))
         else:
             return render(request,'404.html')
 
     # 没有搜索 and 游客 and 没有筛选
     elif (is_kw is False) and (is_auth is False) and (is_role is False):
-        project_list = Project.objects.filter(role__in=[0,3]).order_by('-is_top',"{}create_time".format(sort_str))
+        project_list = Project.objects.filter(role__in=[0,3]).order_by("{}create_time".format(sort_str))
 
     # 没有搜索 and 游客 and 有筛选
     elif (is_kw is False) and (is_auth is False) and (is_role):
         if role in ['0',0]:
-            project_list = Project.objects.filter(role=0).order_by('-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(role=0).order_by("{}create_time".format(sort_str))
         elif role in ['3',3]:
-            project_list = Project.objects.filter(role=3).order_by('-is_top',"{}create_time".format(sort_str))
+            project_list = Project.objects.filter(role=3).order_by("{}create_time".format(sort_str))
         else:
             return render(request,'404.html')
 
@@ -212,7 +210,7 @@ def project_list(request):
             Q(create_user=request.user) | \
             Q(id__in=colla_list),
             Q(name__icontains=kw) | Q(intro__icontains=kw)
-        ).order_by('-is_top','{}create_time'.format(sort_str))
+        ).order_by('{}create_time'.format(sort_str))
 
     # 有搜索 and 认证用户 and 有筛选
     elif (is_kw) and (is_auth) and (is_role):
@@ -220,29 +218,29 @@ def project_list(request):
             project_list = Project.objects.filter(
                 Q(name__icontains=kw)|Q(intro__icontains=kw),
                 role=0
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         elif role in ['1',1]:
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 create_user=request.user
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         elif role in ['2',2]:
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 role=2,
                 role_value__contains=str(request.user.username)
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         elif role in ['3',3]:
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 role=3
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         elif role in ['99',99]:
             colla_list = [i.project.id for i in ProjectCollaborator.objects.filter(user=request.user)] # 用户的协作文集列表
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 id__in=colla_list
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         else:
             return render(request,'404.html')
 
@@ -251,7 +249,7 @@ def project_list(request):
         project_list = Project.objects.filter(
             Q(name__icontains=kw) | Q(intro__icontains=kw),
             role__in=[0, 3]
-        ).order_by('-is_top',"{}create_time".format(sort_str))
+        ).order_by("{}create_time".format(sort_str))
 
     # 有搜索 and 游客 and 有筛选
     elif (is_kw) and (is_auth is False) and (is_role):
@@ -259,12 +257,12 @@ def project_list(request):
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 role=0
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         elif role in ['3',3]:
             project_list = Project.objects.filter(
                 Q(name__icontains=kw) | Q(intro__icontains=kw),
                 role=3
-            ).order_by('-is_top',"{}create_time".format(sort_str))
+            ).order_by("{}create_time".format(sort_str))
         else:
             return render(request,'404.html')
 
@@ -2018,6 +2016,7 @@ def report_md(request):
 def genera_project_file(request):
     report_type = request.POST.get('types',None) # 获取前端传入到导出文件类型参数
     # 导出EPUB文件
+
     pro_id = request.POST.get('pro_id')
     try:
         project = Project.objects.get(id=int(pro_id))
@@ -2137,7 +2136,6 @@ def genera_project_file(request):
                     return JsonResponse({'status': True, 'data': pdf_file})
 
                 except Exception as e:
-                    logger.exception("生成出错")
                     return JsonResponse({'status': False, 'data': '生成出错'})
             else:
                 return JsonResponse({'status': False, 'data': '不支持的类型'})
@@ -2282,50 +2280,25 @@ def manage_image(request):
         try:
             img_id = request.POST.get('img_id','')
             types = request.POST.get('types','') # 操作类型：0表示删除，1表示修改，2表示获取
-            range = request.POST.get('range','single') # 操作范围 single 表示单个图片，multi表示多个图片
             # 删除图片
             if int(types) == 0:
-                if range == 'single':
-                    img = Image.objects.get(id=img_id)
-                    if img.user != request.user:
-                        return JsonResponse({'status': False, 'data': '未授权请求'})
-                    file_path = settings.BASE_DIR+img.file_path
-                    is_exist = os.path.exists(file_path)
-                    if is_exist:
-                        os.remove(file_path)
-                    img.delete() # 删除记录
-                elif range == 'multi':
-                    imgs = img_id.split(',')
-                    for i in imgs:
-                        img = Image.objects.get(id=i)
-                        if img.user != request.user:
-                            logger.error("图片{}非法删除".format(i))
-                            break
-                        file_path = settings.BASE_DIR + img.file_path
-                        is_exist = os.path.exists(file_path)
-                        if is_exist:
-                            os.remove(file_path)
-                        img.delete()  # 删除记录
-
+                img = Image.objects.get(id=img_id)
+                if img.user != request.user:
+                    return JsonResponse({'status': False, 'data': '未授权请求'})
+                file_path = settings.BASE_DIR+img.file_path
+                is_exist = os.path.exists(file_path)
+                if is_exist:
+                    os.remove(file_path)
+                img.delete() # 删除记录
                 return JsonResponse({'status':True,'data':'删除完成'})
             # 移动图片分组
             elif int(types) == 1:
-                if range == 'single':
-                    group_id = request.POST.get('group_id',None)
-                    if group_id is None:
-                        Image.objects.filter(id=img_id,user=request.user).update(group_id=None)
-                    else:
-                        group = ImageGroup.objects.get(id=group_id,user=request.user)
-                        Image.objects.filter(id=img_id,user=request.user).update(group_id=group)
-                elif range == 'multi':
-                    imgs = img_id.split(',')
-                    group_id = request.POST.get('group_id',None)
-                    if group_id is None:
-                        Image.objects.filter(id__in=imgs,user=request.user).update(group_id=None)
-                    else:
-                        group = ImageGroup.objects.get(id=group_id,user=request.user)
-                        Image.objects.filter(id__in=imgs,user=request.user).update(group_id=group)
-
+                group_id = request.POST.get('group_id',None)
+                if group_id is None:
+                    Image.objects.filter(id=img_id,user=request.user).update(group_id=None)
+                else:
+                    group = ImageGroup.objects.get(id=group_id,user=request.user)
+                    Image.objects.filter(id=img_id,user=request.user).update(group_id=group)
                 return JsonResponse({'status':True,'data':'移动完成'})
             # 获取图片
             elif int(types) == 2:

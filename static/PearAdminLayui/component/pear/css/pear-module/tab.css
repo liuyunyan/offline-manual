@@ -40,8 +40,8 @@
 .pear-tab .layui-tab-title .pear-tab-active {
 	display: inline-block;
 	background-color: lightgray;
-	width: 8px;
-	height: 8px;
+	width: 9px;
+	height: 9px;
 	border-radius: 30px;
 	margin-right: 12px;
 }

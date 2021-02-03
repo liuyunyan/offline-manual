@@ -194,7 +194,6 @@
             "undo"             : "fa-undo",
             "redo"             : "fa-repeat",
             "bold"             : "fa-bold",
-            "mark"             : "fa-paint-brush",
             "del"              : "fa-strikethrough",
             "italic"           : "fa-italic",
             "quote"            : "fa-quote-left",
@@ -205,8 +204,8 @@
             "h4"               : editormd.classPrefix + "bold",
             "h5"               : editormd.classPrefix + "bold",
             "h6"               : editormd.classPrefix + "bold",
-            "list-ul"          : "fa-list-ul",
-            "list-ol"          : "fa-list-ol",
+            "list-ul"        : "fa-list-ul",
+            "list-ol"        : "fa-list-ol",
             "hr"               : "fa-minus",
             "link"             : "fa-link",
             "reference-link" : "fa-anchor",
@@ -230,7 +229,6 @@
             "info"             : "fa-info-circle"
         },        
         toolbarIconTexts     : {},
-        toolbarIconSvgs      : {},
         
         lang : {
             name        : "zh-cn",
@@ -240,7 +238,6 @@
                 undo             : "撤销（Ctrl+Z）",
                 redo             : "重做（Ctrl+Y）",
                 bold             : "粗体",
-                mark             : "文本高亮",
                 del              : "删除线",
                 italic           : "斜体",
                 quote            : "引用",
@@ -1210,12 +1207,10 @@
                     
                     var title     = settings.lang.toolbar[index];
                     var iconTexts = settings.toolbarIconTexts[index];
-                    var iconSvgs  = settings.toolbarIconSvgs[index];
                     var iconClass = settings.toolbarIconsClass[index];
                     
                     title     = (typeof title     === "undefined") ? "" : title;
                     iconTexts = (typeof iconTexts === "undefined") ? "" : iconTexts;
-                    iconSvgs = (typeof iconSvgs === "undefined") ? "" : iconSvgs;
                     iconClass = (typeof iconClass === "undefined") ? "" : iconClass;
 
                     var menuItem = pullRight ? "<li class=\"pull-right\">" : "<li>";
@@ -2933,19 +2928,6 @@
                 cm.setCursor(cursor.line, cursor.ch + 2);
             }
         },
-
-        mark : function(){
-            var cm        = this.cm;
-            var cursor    = cm.getCursor();
-            var selection = cm.getSelection();
-
-            cm.replaceSelection("==" + selection + "==");
-
-            if(selection === "") {
-                cm.setCursor(cursor.line, cursor.ch + 2);
-            }
-
-        },
         
         del : function() {
             var cm        = this.cm;
@@ -3472,8 +3454,7 @@
         atLink        : /@(\w+)/g,
         email         : /(\w+)@(\w+)\.(\w+)\.?(\w+)?/g,
         emailLink     : /(mailto:)?([\w\.\_]+)@(\w+)\.(\w+)\.?(\w+)?/g,
-        // mark          : /==([^\s][^\<\/code\>][\s\S]*?[^\s])==(?!=)/g,
-        mark          : /(={2})([^\<\/code\>].+?)\1/g,
+        //emoji         : /:([\w\+-]+):/g,
         emoji         : /:([A-Za-z\+-]+):/g,
         emojiDatetime : /(\d{2}:\d{2}:\d{2})/g,
         twemoji       : /:(tw-([\w]+)-?(\w+)?):/g,
@@ -3484,6 +3465,7 @@
 
     // Emoji graphics files url path
     editormd.emoji     = {
+        //path  : "http://www.emoji-cheat-sheet.com/graphics/emojis/",
         path  : "/static/editor.md/plugins/emoji-dialog/emoji/",
         ext   : ".png"
     };
@@ -3524,7 +3506,6 @@
             
         var regexs          = editormd.regexs;
         var atLinkReg       = regexs.atLink;
-        var markReg         = regexs.mark;
         var emojiReg        = regexs.emoji;
         var emailReg        = regexs.email;
         var emailLinkReg    = regexs.emailLink;
@@ -3533,34 +3514,6 @@
         var editormdLogoReg = regexs.editormdLogo;
         var pageBreakReg    = regexs.pageBreak;
 
-	// 增加引用样式解析规则
-        markedRenderer.blockquote = function($quote) {
-            var quoteBegin = "";
-
-            var ps = $quote.match(/<p\s*?>/i);
-			
-            if(ps !== null) {
-                quoteBegin = ps[0];
-                $quote = $quote.substr(3);
-            }
-            var $class = "default";
-
-            if($quote.indexOf("i") === 0){
-                $class = "info";
-                $quote = $quote.substr(1);
-            }else if($quote.indexOf("w") === 0){
-                $class = "warning";
-                $quote = $quote.substr(1);
-            }else if($quote.indexOf("s") === 0){
-                $class = "success";
-                $quote = $quote.substr(1);
-            }else if($quote.indexOf("d") === 0){
-                $class = "danger";
-                $quote = $quote.substr(1);
-            }
-
-            return '<blockquote class="'+$class+'">\n' + quoteBegin + $quote + '</blockquote>\n';
-        };    
         // marked 解析图片
         markedRenderer.image = function(href,title,text) {
             var attr = "";
@@ -3765,20 +3718,6 @@
 
             return text;
         };
-
-        // marked 高亮标记解析
-        markedRenderer.mark = function(text){
-            if(markReg.test(text)){
-                // console.log(1,text)
-                var mark_replace_reg = /==(.+)==/g
-                text = text.replace(markReg,function(e){
-                    // console.log(2,e)
-                    return "<mark>" + e.replace(mark_replace_reg,function($1,$2){return $2}) + "</mark>"
-                })
-            }
-            return text
-        };
-
         // marked 链接解析
         markedRenderer.link = function (href, title, text) {
 
@@ -3856,7 +3795,7 @@
             // headingHTML    += "<a name=\"" + text + "\" class=\"reference-link\"></a>";
             headingHTML    += "<a name=\"" + text.replace(/<[^>]*>\s?/g,'') + "\" class=\"reference-link\"></a>";
             headingHTML    += "<span class=\"header-link octicon octicon-link\"></span>";
-            headingHTML    += (hasLinkReg) ? this.atLink(this.mark(this.emoji(text))) : this.mark(this.emoji(text));
+            headingHTML    += (hasLinkReg) ? this.atLink(this.emoji(linkText)) : this.atLink(this.emoji(text));
             headingHTML    += "</h" + level + ">";
 
             return headingHTML;
@@ -3893,7 +3832,7 @@
             var tocHTML = "<div class=\"markdown-toc editormd-markdown-toc\">" + text + "</div>";
             
             return (isToC) ? ( (isToCMenu) ? "<div class=\"editormd-toc-menu\">" + tocHTML + "</div><br/>" : tocHTML )
-                           : ( (pageBreakReg.test(text)) ? this.pageBreak(text) : "<p" + isTeXAddClass + ">" + this.atLink(this.mark(this.emoji(text))) + "</p>\n" );
+                           : ( (pageBreakReg.test(text)) ? this.pageBreak(text) : "<p" + isTeXAddClass + ">" + this.atLink(this.emoji(text)) + "</p>\n" );
         };
         // marked 解析代码块
         markedRenderer.code = function (code, lang, escaped) {
@@ -3948,7 +3887,7 @@
 
                 return "<svg class='mindmap' style='width:100%;min-height:150px;height:"+ custom_height +"px;' id='mindmap-"+ map_id +"'>"+code+"</svg>";
             }
-            else if(/^echart/i.test(lang)||/^echarts/i.test(lang)){ // echart 图表
+            else if(/^echart/i.test(lang)){ // echart 图表
                 var len = 9 || 32;
             　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; 
             　　var maxPos = $chars.length;
