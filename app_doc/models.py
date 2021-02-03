@@ -239,7 +239,7 @@ class Image(models.Model):
 
 # 附件模型
 class Attachment(models.Model):
-    file_name = models.CharField(max_length=200,verbose_name="附件名",default='mrdoc_附件.zip')
+    file_name = models.CharField(max_length=200,verbose_name="附件名",default='manual_附件.zip')
     file_size = models.CharField(max_length=100,verbose_name="附件大小",blank=True,null=True)
     file_path = models.FileField(upload_to='attachment/%Y/%m/',verbose_name='附件')
     user = models.ForeignKey(User,on_delete=models.CASCADE,)

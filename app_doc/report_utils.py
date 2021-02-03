@@ -690,7 +690,6 @@ class ReportEPUB():
                     <h1 class="title"">{title}</h1>
                     <p class="author"><b>{author} 著</b></p><br>
                     <p class="author">{create_time}</p>
-                    <p class="book-src">本书籍由<a href='http://mrdoc.zmister.com'>MrDoc(mrdoc.zmister.com)</a>生成</p>
                   </div>
             </body>
             </html>
@@ -813,7 +812,7 @@ class ReportEPUB():
                 <dc:language>zh</dc:language>
                 <dc:creator>{creator}</dc:creator>
                 <dc:identifier id="bookid">urn:uuid:12345</dc:identifier>
-                <dc:publisher>MrDoc制作</dc:publisher>
+                <dc:publisher>电子手册制作</dc:publisher>
                 <dc:date opf:event="publication">{create_time}</dc:date>
                 <dc:description>{desc}</dc:description>
                 <meta name="cover" content="cover_img" />
@@ -915,7 +914,7 @@ class ReportPDF():
                         </head>
                         <body>
                             <div style="position: fixed;font-size:8px; bottom: 5px; right: 10px; background: red; z-index: 10000">
-                                本文档由MrDoc觅道文档生成
+                                本文档由电子手册生成
                             </div>
                             <div style="text-align:center;margin-top:400px;">
                                 <h1>{project_name}</h1>

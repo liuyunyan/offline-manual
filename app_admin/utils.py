@@ -36,12 +36,12 @@ def send_email(to_email,vcode_str):
             s = smtplib.SMTP_SSL(smtp_host, int(smtp_port))  # 发件箱邮件服务器及端口号
         else:
             s = smtplib.SMTP(smtp_host, int(smtp_port))
-        subject = "MrDoc - 重置密码验证码"
+        subject = "重置密码验证码"
         content = "你的验证码为：{}，验证码30分钟内有效！".format(vcode_str)
 
         msg = MIMEText(content, _subtype='html', _charset='utf-8')
         msg['Subject'] = subject
-        msg['From'] = 'MrDoc助手[{}]'.format(msg_from)
+        msg['From'] = '助手[{}]'.format(msg_from)
         msg['To'] = msg_to
         try:
             s.login(username, passwd)
