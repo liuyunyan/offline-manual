@@ -908,7 +908,7 @@ def admin_center_menu(request):
         },
         {
             "id": 3,
-            "title": "文档管理",
+            "title": "手册管理",
             "type": 1,
             "icon": "layui-icon layui-icon-form",
             "href": reverse('doc_manage'),

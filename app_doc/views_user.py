@@ -87,7 +87,7 @@ def user_center_menu(request):
             "children": [
                 {
                     "id": "doc_manage",
-                    "title": "文档管理",
+                    "title": "手册管理",
                     "icon": "layui-icon layui-icon-face-smile",
                     "type": 1,
                     "openType": "_iframe",
