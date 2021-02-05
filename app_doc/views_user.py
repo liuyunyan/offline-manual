@@ -109,14 +109,14 @@ def user_center_menu(request):
                     "openType": "_iframe",
                     "href": reverse("manage_doc_tag")
                 },
-                {
-                    "id": "doc_share",
-                    "title": "我的分享",
-                    "icon": "layui-icon layui-icon-face-cry",
-                    "type": 1,
-                    "openType": "_iframe",
-                    "href": reverse("manage_doc_share")
-                },
+                # {
+                #     "id": "doc_share",
+                #     "title": "我的分享",
+                #     "icon": "layui-icon layui-icon-face-cry",
+                #     "type": 1,
+                #     "openType": "_iframe",
+                #     "href": reverse("manage_doc_share")
+                # },
                 {
                     "id": "doc_recycle",
                     "title": "文档回收站",
@@ -175,24 +175,25 @@ def user_center_menu(request):
                     "openType": "_iframe",
                     "href": reverse("manage_self")
                 },
-                {
-                    "id": 602,
-                    "title": "Token管理",
-                    "icon": "layui-icon layui-icon-face-cry",
-                    "type": 1,
-                    "openType": "_iframe",
-                    "href": reverse("manage_token")
-                },
+                # {
+                #     "id": 602,
+                #     "title": "Token管理",
+                #     "icon": "layui-icon layui-icon-face-cry",
+                #     "type": 1,
+                #     "openType": "_iframe",
+                #     "href": reverse("manage_token")
+                # },
             ]
-        },
-        {
-            "id": "user_manual",
-            "title": "使用手册",
-            "icon": "layui-icon layui-icon-template-1",
-            "type": 1,
-            "openType": "_blank",
-            "href": "",#http://mrdoc.zmister.com/project-54/
         }
+        # ,
+        # {
+        #     "id": "user_manual",
+        #     "title": "使用手册",
+        #     "icon": "layui-icon layui-icon-template-1",
+        #     "type": 1,
+        #     "openType": "_blank",
+        #     "href": "http://mrdoc.zmister.com/project-54/",
+        # },
         # {
         #     "id": "common",
         #     "title": "使用帮助",
