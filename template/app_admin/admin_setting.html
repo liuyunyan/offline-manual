@@ -1,7 +1,7 @@
 {% extends 'app_admin/admin_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}站点设置{% endblock %}
+{% block title %}系统设置{% endblock %}
 {% block custom_element %}
 <link href="{% static 'tagsInput/tagsinput.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock %}
@@ -10,7 +10,7 @@
   <div class="layui-card-body">
     <div class="layui-card-header" style="margin-bottom: 10px;">
       <div class="layui-row">
-          <span style="font-size:18px;">站点设置
+          <span style="font-size:18px;">系统设置
           </span>
       </div>
     </div>
@@ -18,7 +18,7 @@
         <div class="layui-tab">
           <ul class="layui-tab-title">
             <li class="layui-this">基础设置</li>
-            <li>邮箱设置</li>
+            <!-- <li>邮箱设置</li> -->
             <li>文档设置</li>
           </ul>
           <div class="layui-tab-content">
@@ -29,16 +29,16 @@
                   <input type="text" name="type" hidden value="basic">
                   <!-- 站点名称 -->
                   <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">站点名称</label>
+                    <label class="layui-form-label">系统名称</label>
                     <div class="layui-input-inline">
-                      <input name="site_name" placeholder="请输入站点标题" class="layui-input" value="{% if site_name != None %}{{site_name}}{% endif %}"></input>
+                      <input name="site_name" placeholder="请输入系统标题" class="layui-input" value="{% if site_name != None %}{{site_name}}{% endif %}"></input>
                     </div>
                   </div>
                   <!-- 站点子标题 -->
                   <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">子标题</label>
                     <div class="layui-input-block">
-                      <input name="site_sub_name" placeholder="请输入站点的子标题" class="layui-input" value="{% if site_sub_name != None %}{{site_sub_name}}{% endif %}"></input>
+                      <input name="site_sub_name" placeholder="请输入系统的子标题" class="layui-input" value="{% if site_sub_name != None %}{{site_sub_name}}{% endif %}"></input>
                     </div>
                   </div>
                   <!-- 站点关键词 -->
@@ -49,19 +49,19 @@
                     </div>
                   </div>
                   <!-- 站点描述 -->
-                  <div class="layui-form-item layui-form-text">
+                  <!-- <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">站点描述</label>
                     <div class="layui-input-block">
                       <input name="site_desc" placeholder="请用简短的文字描述你的MrDoc站点" class="layui-input" value="{% if site_desc != None %}{{site_desc}}{% endif %}"></input>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- 备案号 -->
-                  <div class="layui-form-item layui-form-text">
+                  <!-- <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">备案号</label>
                     <div class="layui-input-inline">
                       <input name="beian_code" placeholder="请输入网站的备案号" class="layui-input" value="{% if beian_code != None %}{{beian_code}}{% endif %}"></input>
                     </div>
-                  </div>
+                  </div> -->
                   <hr>
                   <!-- 首页文集排序 -->
                   <div class="layui-form-item">
@@ -78,13 +78,13 @@
                     <div class="layui-form-mid layui-word-aux">首页文集列表的排序方式</div>
                   </div>
                   <!-- 站点注册开关 -->
-                  <div class="layui-form-item">
+                  <!-- <div class="layui-form-item">
                     <label class="layui-form-label">禁止注册</label>
                     <div class="layui-input-inline">
                       <input type="checkbox" name="close_register" lay-skin="switch" lay-text="开启|关闭"  {% if close_register %}checked{% endif %}>
                     </div>
                     <div class="layui-form-mid layui-word-aux">开启此选项将禁止新用户注册</div>
-                  </div>
+                  </div> -->
                   <!-- 站点强制登录开关 -->
                    <div class="layui-form-item">
                     <label class="layui-form-label">全站登录</label>
@@ -94,13 +94,13 @@
                     <div class="layui-form-mid layui-word-aux">开启此选项，除注册、登录页面外的所有页面的访问都需要登录</div>
                   </div>
                   <!-- 站点注册码开关 -->
-                  <div class="layui-form-item">
+                  <!-- <div class="layui-form-item">
                     <label class="layui-form-label">启用注册码</label>
                     <div class="layui-input-inline">
                       <input type="checkbox" name="enable_register_code" lay-skin="switch" lay-text="开启|关闭"  {% if enable_register_code %}checked{% endif %}>
                     </div>
                     <div class="layui-form-mid layui-word-aux">开启此选项，新用户注册将需要填写注册码</div>
-                  </div>
+                  </div> -->
                   <!-- 文集导出开关 -->
                    <div class="layui-form-item">
                     <label class="layui-form-label">文集下载</label>
@@ -110,13 +110,13 @@
                     <div class="layui-form-mid layui-word-aux">开启此选项，文集允许导出为EPUB和DOCX等格式文件以供下载，文集拥有者可进行进一步控制特定文集是否开放导出</div>
                   </div>
                   <!-- 邮箱开关 -->
-                  <div class="layui-form-item">
+                  <!-- <div class="layui-form-item">
                     <label class="layui-form-label">启用邮箱</label>
                     <div class="layui-input-inline">
                       <input type="checkbox" name="enable_email" lay-skin="switch" lay-text="开启|关闭"  {% if enable_email %}checked{% endif %}>
                     </div>
                     <div class="layui-form-mid layui-word-aux">开启此选项后还需进行邮箱信息配置</div>
-                  </div>
+                  </div> -->
                   <!-- 图片缩略开关 -->
                   <div class="layui-form-item">
                     <label class="layui-form-label">图片缩略</label>
@@ -127,7 +127,7 @@
                   </div>
                   <hr>
 
-                  <div class="layui-form-item layui-form-text">
+                  <!-- <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">统计代码</label>
                     <div class="layui-input-block">
                       <textarea name="static_code" placeholder="如果需要调用第三方的统计功能，请将第三方统计工具代码输入至此，可以包含<script>标签" class="layui-textarea">{{static_code}}</textarea>
@@ -152,7 +152,7 @@
                     <div class="layui-input-block">
                       <textarea name="ad_code_3" placeholder="此广告位位于文档左侧目录栏下方，可以包含<script>标签" class="layui-textarea">{{ad_code_3}}</textarea>
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="layui-form-item">
                     <div class="layui-input-block">
@@ -164,7 +164,7 @@
               <!-- 网站设置结束 -->
 
               <!-- 邮箱设置 -->
-            <div class="layui-tab-item">
+            <!-- <div class="layui-tab-item">
                 <form class="layui-form" action="" method="post">
                    {% csrf_token %}
                     <input type="text" name="type" hidden value="email">
@@ -216,7 +216,7 @@
                     </div>
                   </div>
                 </form>
-            </div>
+            </div> -->
               <!-- 邮箱设置结束 -->
 
               <!-- 全局文档设置 -->
@@ -224,7 +224,7 @@
               <form action="" method="post" class="layui-form">
                 {% csrf_token %}
                 <input type="text" name="type" hidden value="doc">
-                <div class="layui-form-item" style="" id="role-user">
+                <!-- <div class="layui-form-item" style="" id="role-user">
                     <label class="layui-form-label">ifrme白名单</label>
                     <div class="layui-input-inline">
                         <div class="tagsinput-primary form-group">
@@ -232,7 +232,7 @@
                         </div>
                     </div>
                     <div class="layui-form-mid layui-word-aux">默认支持YouTube、优酷、QQ视频、Facebook、哔哩哔哩、TED网站，仅用于EditorMD编辑器模式</div>
-                </div>
+                </div> -->
 
                 <div class="layui-form-item" style="" id="role-user">
                   <label class="layui-form-label">图片大小</label>

@@ -936,7 +936,7 @@ def admin_center_menu(request):
         },
         {
             "id": 7,
-            "title": "站点设置",
+            "title": "系统设置",
             "type": 1,
             "icon": "layui-icon layui-icon-set",
             "href": reverse('sys_setting'),
