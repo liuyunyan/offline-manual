@@ -67,4 +67,6 @@ urlpatterns = [
     path('my_collect/',views.my_collect,name="my_collect"), # 我的收藏
     path('manage_collect/',views.manage_collect,name="manage_collect"), # 收藏管理
     path('get_version/',views.get_version,name="get_version"), # 获取当前版本
+
+    path('export_zip/',views.export_zip,name="export_zip"),
 ]

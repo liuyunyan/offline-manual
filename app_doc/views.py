@@ -27,6 +27,7 @@ import base64
 import hashlib
 from django.utils.html import strip_tags
 import markdown
+import zipfile
 
 
 # 替换前端传来的非法字符
@@ -3137,3 +3138,28 @@ def get_version(request):
             'data':'异常'
         }
     return JsonResponse(data)
+
+
+# 获取当前版本
+def export_zip(request):
+    archive_file = 'emanual_data.zip'
+    if os.path.exists(archive_file):
+        os.remove(archive_file)
+
+    f = zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED)
+    f.write('/app/MrDoc/config/db.sqlite3', 'db.sqlite3')
+
+    media_path = '/app/MrDoc/media'
+    pre_len = len(os.path.dirname(media_path))
+    for parent, dirnames, filenames in os.walk(media_path):
+        for filename in filenames:
+            pathfile = os.path.join(parent, filename)
+            arcname = pathfile[pre_len:].strip(os.path.sep)  # 相对路径
+            f.write(pathfile, arcname)
+    f.close()
+
+    file = open(archive_file, 'rb')
+    response = HttpResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="emanual_data.zip"'
+    return response
