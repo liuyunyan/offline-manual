@@ -3148,7 +3148,7 @@ def export_zip(request):
         'app_doc_doc': get_docs(),
         'app_doc_project': get_projects()
     }
-    result_json = json.dumps(result)
+    result_json = json.dumps(result, ensure_ascii=False)
     with open('db.json', 'w') as f:
         f.write(result_json)
 
