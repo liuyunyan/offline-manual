@@ -3144,11 +3144,7 @@ def get_version(request):
 
 # 获取当前版本
 def export_zip(request):
-    mydb = sqlite3.connect("/app/MrDoc/config/db.sqlite3")
-    cursor = mydb.cursor()
-    cursor.execute('select * from app_doc_doc order by id')
-    values = cursor.fetchall()
-    print(json.dumps(values))
+    print(get_docs())
 
     archive_file = 'emanual_data.zip'
     if os.path.exists(archive_file):
@@ -3171,3 +3167,31 @@ def export_zip(request):
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="emanual_data.zip"'
     return response
+
+
+def get_docs():
+    docs = []
+
+    mydb = sqlite3.connect("/app/MrDoc/config/db.sqlite3")
+    cursor = mydb.cursor()
+    cursor.execute('select * from app_doc_doc order by id')
+    values = cursor.fetchall()
+    for v in values:
+        doc = {
+            "id": v[0],
+            "name": v[1],
+            "content": v[2],
+            "top_doc": v[3],
+            "create_time": v[4],
+            "modify_time": v[5],
+            "create_user_id": v[6],
+            "pre_content": v[7],
+            "parent_doc": v[8],
+            "sort": v[9],
+            "status": v[10],
+            "editor_mode": v[11],
+            "open_children": v[12],
+            "show_children": v[13]
+        }
+        docs.append(doc)
+    return docs
