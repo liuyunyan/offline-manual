@@ -3144,7 +3144,12 @@ def get_version(request):
 
 # 获取当前版本
 def export_zip(request):
-    print(get_docs())
+    result = {
+        'app_doc_doc': get_docs()
+    }
+    result_json = json.dumps(result, ensure_ascii=False, encoding='UTF-8')
+    with open('db.json', 'w') as f:
+        f.write(result_json)
 
     archive_file = 'emanual_data.zip'
     if os.path.exists(archive_file):
@@ -3152,6 +3157,7 @@ def export_zip(request):
 
     f = zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED)
     f.write('/app/MrDoc/config/db.sqlite3', 'db.sqlite3')
+    f.write('db.json', 'db.json')
 
     media_path = '/app/MrDoc/media'
     pre_len = len(os.path.dirname(media_path))
