@@ -29,6 +29,8 @@ from django.utils.html import strip_tags
 import markdown
 import zipfile
 
+import sqlite3
+
 
 # 替换前端传来的非法字符
 def validateTitle(title):
@@ -3142,6 +3144,12 @@ def get_version(request):
 
 # 获取当前版本
 def export_zip(request):
+    mydb = sqlite3.connect("/app/MrDoc/config/db.sqlite3")
+    cursor = mydb.cursor()
+    cursor.execute('select * from app_doc_doc order by id')
+    values = cursor.fetchall()
+    print(values)
+
     archive_file = 'emanual_data.zip'
     if os.path.exists(archive_file):
         os.remove(archive_file)
