@@ -3148,7 +3148,7 @@ def export_zip(request):
     cursor = mydb.cursor()
     cursor.execute('select * from app_doc_doc order by id')
     values = cursor.fetchall()
-    print(values)
+    print(json.dumps(values))
 
     archive_file = 'emanual_data.zip'
     if os.path.exists(archive_file):
