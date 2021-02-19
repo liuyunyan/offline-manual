@@ -3145,9 +3145,10 @@ def get_version(request):
 # 获取当前版本
 def export_zip(request):
     result = {
-        'app_doc_doc': get_docs()
+        'app_doc_doc': get_docs(),
+        'app_doc_project': get_projects()
     }
-    result_json = json.dumps(result, ensure_ascii=False, encoding='UTF-8')
+    result_json = json.dumps(result)
     with open('db.json', 'w') as f:
         f.write(result_json)
 
@@ -3201,3 +3202,28 @@ def get_docs():
         }
         docs.append(doc)
     return docs
+
+def get_projects():
+    projects = []
+
+    mydb = sqlite3.connect("/app/MrDoc/config/db.sqlite3")
+    cursor = mydb.cursor()
+    cursor.execute('select * from app_doc_project order by id')
+    values = cursor.fetchall()
+    for v in values:
+        p = {
+            "id": v[0],
+            "name": v[1],
+            "intro": v[2],
+            "create_time": v[3],
+            "modify_time": v[4],
+            "create_user_id": v[5],
+            "role": v[6],
+            "role_value": v[7],
+            "icon": v[8],
+            "is_watermark": v[9],
+            "watermark_type": v[10],
+            "watermark_value": v[11]
+        }
+        projects.append(p)
+    return projects
