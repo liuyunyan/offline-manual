@@ -48,6 +48,12 @@
                       <input name="site_keywords" placeholder="多个关键词请使用使用英文逗号,进行分隔" class="layui-input" value="{% if site_keywords != None %}{{site_keywords}}{% endif %}"></input>
                     </div>
                   </div>
+                  <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">数据备份</label>
+                    <div class="layui-input-block">
+                      <label style="vertical-align: text-top;">导出手册数据到本地</label><button onclick="exportZip()" type="button" style="margin-left: 10px" class="layui-btn layui-btn-normal layui-btn-sm">手册数据导出</button>
+                    </div>
+                  </div>
                   <!-- 站点描述 -->
                   <!-- <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">站点描述</label>
@@ -286,5 +292,31 @@
   $.ajaxSetup({
       data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
   });
+  
+  layui.use(['layer'], function() {
+    let $ = layui.jquery;
+    let dtree = layui.dtree;
+    var layer = layui.layer;
+    exportZip = function () {
+      var haveIframe = $("iframe")
+      if(haveIframe){
+        haveIframe.remove();
+      }
+      downloadFile("/export_zip/");
+    };
+    downloadFile = function(url) {   
+      try{ 
+            var elemIF = document.createElement("iframe");   
+            elemIF.src = url;   
+            elemIF.style.display = "none";   
+            document.body.appendChild(elemIF);   
+        }catch(e){
+          console.log(e);
+          layer.msg("导出失败", { icon: 2, time: 1000 });
+        }     
+    }
+})
+
+
 </script>
 {% endblock %}
