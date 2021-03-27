@@ -136,9 +136,9 @@
                 <div class="layui-inline">
                     <!-- 文档搜索 -->
                     <div class="layui-input-inline" style="width: inherit;">
-                        <a href="?q={{query}}&type=doc&d_range={{d_range}}" class="search_type current_search_type" id="search_doc"><i class="layui-icon layui-icon-search"></i>{% trans "文档" %}</a>
+                        <a href="?q={{query}}&type=doc&d_range={{d_range}}" class="search_type current_search_type" id="search_doc"><i class="layui-icon layui-icon-search"></i>{% trans "手册" %}</a>
                         <a href="{% url 'search' %}?kw={{query}}&type=pro&d_range={{d_range}}" class="search_type" id="search_project"><i class="layui-icon layui-icon-list"></i>{% trans "文集" %}</a>
-                        <a href="{% url 'search' %}?kw={{query}}&type=tag&d_range={{d_range}}" class="search_type" id="search_tag"><i class="layui-icon layui-icon-note"></i>{% trans "标签" %}</a>
+                        <!-- <a href="{% url 'search' %}?kw={{query}}&type=tag&d_range={{d_range}}" class="search_type" id="search_tag"><i class="layui-icon layui-icon-note"></i>{% trans "标签" %}</a> -->
                     </div>
                 </div>
                 <!-- 筛选结束 -->
