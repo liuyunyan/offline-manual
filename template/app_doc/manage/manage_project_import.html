@@ -63,7 +63,7 @@
         done: function(res){
             //上传完毕回调
             layer.closeAll('loading'); //关闭loading
-            // 遍历文集的文档
+            // 遍历文集的手册
             layui.each(res.data,function(index,item){
                 // console.log(index,item)
                 var doc_ele = '<li data-sortable-id="'+ item[0] +'" class="list-group-item">'+item[1]+'<ul class="list-group nested-sortable"></ul></li>'
@@ -76,9 +76,9 @@
                 title:'编辑导入的文集',
                 area:['700px','400px'],
                 content:$("#import-project-sort"),
-                btn:['保存文档','发布文档'],
+                btn:['保存手册','发布手册'],
                 yes:function(index,layero){
-                    // 保存文档
+                    // 保存手册
                     console.log(serialize(root))
                     var sort_data = {
                         'pid':res.id,
@@ -102,7 +102,7 @@
                     });
                 },
                 btn2:function(index,layero){
-                    // 发布文档
+                    // 发布手册
                     console.log(serialize(root))
                     var sort_data = {
                         'pid':res.id,
@@ -146,7 +146,7 @@
     });
 
 </script>
-<!-- 导入的文集文档排序模板div -->
+<!-- 导入的文集手册排序模板div -->
 <style>
     .row {
         display: -ms-flexbox;
@@ -231,15 +231,15 @@
             </div>
           </div>
     </div>
-    <div class="layui-row" style="padding-left: 14px;padding-bottom: 10px;">文档拖拽排序</div>
+    <div class="layui-row" style="padding-left: 14px;padding-bottom: 10px;">手册拖拽排序</div>
     <div id="nested" class="row">
         <ul id="nestedDemo" class="list-group col nested-sortable"></ul>
     </div>
 </div>
-<!-- 文档拖拽排序 -->
+<!-- 手册拖拽排序 -->
 <script src="{% static 'sortablejs/Sortable.js' %}"></script>
 <script>
-    // 文档动态排序
+    // 手册动态排序
     function docSort(){
         // Nested demo
         var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));

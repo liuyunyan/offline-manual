@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="keywords" content="{% block keyword %}{% endblock %}{{site_keywords}}"/>
     <meta name="description" content="{% block description %}{% endblock %}" />
-    <title>{{doc.name}} - {% trans "文档分享" %} - {% if site_name != None and site_name != '' %}{{site_name}} {% else %}{% trans "站点标题" %}{% endif %}</title>
+    <title>{{doc.name}} - {% trans "手册分享" %} - {% if site_name != None and site_name != '' %}{{site_name}} {% else %}{% trans "站点标题" %}{% endif %}</title>
     <link href="{% static 'layui/css/layui.css' %}?version={{mrdoc_version}}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'editor.md/css/editormd.css' %}?version={{mrdoc_version}}" />
     {% if doc.editor_mode == 2 %}
@@ -42,7 +42,7 @@
         .doc-content ul ul ul li{
             list-style-type: square;
         }
-        /* 弹出框文档目录样式 */
+        /* 弹出框手册目录样式 */
         ul.markdown-toc-list{
             list-style-position:inside;
         }
@@ -84,7 +84,7 @@
         #url_qrcode img{
             margin: auto;
         }
-        /* 文档代码块样式 */
+        /* 手册代码块样式 */
         ol.linenums li{ 
             width: max-content;
         }
@@ -120,9 +120,9 @@
     <!-- 左侧目录栏 -->
     <!-- 左侧目录栏结束 -->
 
-    <!-- 右侧文档栏 -->
+    <!-- 右侧手册栏 -->
     <div class="doc-body">
-        <!-- 文档导航 -->
+        <!-- 手册导航 -->
         <div class="doc-header" role="navigation">
             <!-- <a class="btn pull-left js-toolbar-action" aria-label="" href="javascript:void(0);" title="切换侧边栏">
                 <i class="fa fa-align-justify"></i>
@@ -138,15 +138,15 @@
             </a>
             <!-- 顶部工具栏 -->
             {% block head_toolbar %}
-            <!-- 文档目录 -->
+            <!-- 手册目录 -->
             <div id="toc-container" class='sidebar'></div>
             {% endblock %}
 
         </div>
-        <!-- 文档主体 -->
+        <!-- 手册主体 -->
         <div class="doc-body-content">
             <div class="doc-body-content-div">
-                <!-- 文档内容 -->
+                <!-- 手册内容 -->
                 <div class="doc-content">
                     <!-- 标题 -->
                     <div class="doc-info">
@@ -209,7 +209,7 @@
             </div>
         </div>
     </div>
-    <!-- 右侧文档栏结束 -->
+    <!-- 右侧手册栏结束 -->
     <!-- 右下角工具按钮 -->
     <div>
         <div class="toTop" ><i class="fa fa-arrow-up"></i></div>
@@ -314,7 +314,7 @@
                         var toc_cnt = $(".markdown-toc-list").children().length;
                         //console.log(toc_cnt)
                         if(toc_cnt > 0){
-                            //console.log('显示文档目录')
+                            //console.log('显示手册目录')
                             $(".tocMenu").show();
                             initSidebar('.sidebar', '.doc-content');
                         }
@@ -378,13 +378,13 @@
         $("body").toggleClass("big-page");
         return false;
     }
-    // 文档分享默认收起侧边栏
+    // 手册分享默认收起侧边栏
     toggleSidebar()
 </script>
 
 <!-- 切换内容字体 -->
 <script>
-    //切换文档内容字体类型
+    //切换手册内容字体类型
     $(function(){
         $('.font-switch').click(switchFont);
     });
@@ -502,9 +502,9 @@
         $(".sidebar").toggleClass("doc-toc-hide");
         // },300)
     }
-    // 切换文档目录显示与否
+    // 切换手册目录显示与否
     $(".tocMenu").click(function() {
-        console.log("隐藏文档目录")
+        console.log("隐藏手册目录")
         $(".sidebar").toggleClass("doc-toc-hide");
     });
     

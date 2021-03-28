@@ -3,7 +3,7 @@
 # @创建者：州的先生
 # #日期：2019/12/7
 # 博客地址：zmister.com
-# MrDoc文集文档导出相关功能代码
+# MrDoc文集手册导出相关功能代码
 from django.conf import settings
 import subprocess
 import datetime,time
@@ -158,9 +158,9 @@ class ReportMD():
             os.mkdir(self.media_path)
 
     def work(self):
-        # 读取指定文集的文档数据
+        # 读取指定文集的手册数据
         data = Doc.objects.filter(top_doc=self.pro_id, parent_doc=0).order_by("sort")
-        # 遍历一级文档
+        # 遍历一级手册
         for d in data:
             md_name = d.name
             md_content = d.pre_content
@@ -170,7 +170,7 @@ class ReportMD():
             with open('{}/{}.md'.format(self.project_path,md_name),'w',encoding='utf-8') as files:
                 files.write(md_content)
 
-            # 查询二级文档
+            # 查询二级手册
             data_2 = Doc.objects.filter(parent_doc=d.id).order_by("sort")
             for d2 in data_2:
                 md_name_2 = d2.name
@@ -181,7 +181,7 @@ class ReportMD():
                 with open('{}/{}.md'.format(self.project_path, md_name_2), 'w', encoding='utf-8') as files:
                     files.write(md_content_2)
 
-                # 获取第三级文档
+                # 获取第三级手册
                 data_3 = Doc.objects.filter(parent_doc=d2.id).order_by("sort")
                 for d3 in data_3:
                     md_name_3 = d3.name
@@ -264,7 +264,7 @@ class ReportEPUB():
         # 复制封面图片到相关目录
         shutil.copyfile(settings.BASE_DIR+'/static/report_epub/epub_cover1.jpg',self.base_path + '/OEBPS/Images/epub_cover1.jpg')
 
-    # 将文档内容写入HTML文件
+    # 将手册内容写入HTML文件
     def write_html(self, d, html_str):
         # 使用BeautifulSoup解析拼接好的HTML文本
         html_soup = BeautifulSoup(html_str, 'lxml')
@@ -538,9 +538,9 @@ class ReportEPUB():
         with open(temp_file_path, 'a+', encoding='utf-8') as htmlfile:
             htmlfile.write('<?xml version="1.0" encoding="UTF-8"?>' + str(html_soup))
 
-    # 生成文档HTML
+    # 生成手册HTML
     def generate_html(self):
-        # 查询文档
+        # 查询手册
         data = Doc.objects.filter(top_doc=self.project.id, parent_doc=0, status=1).order_by("sort")
         self.toc_list = [
             {
@@ -590,7 +590,7 @@ class ReportEPUB():
 
             nav_num += 1
 
-            # 获取第二级文档
+            # 获取第二级手册
             data_2 = Doc.objects.filter(parent_doc=d.id,status=1).order_by("sort")
             if data_2.count() > 0:
                 toc_summary_str += '<ul>'
@@ -620,7 +620,7 @@ class ReportEPUB():
 
                 nav_num += 1
 
-                # 获取第三级文档
+                # 获取第三级手册
                 data_3 = Doc.objects.filter(parent_doc=d2.id,status=1).order_by("sort")
                 if data_3.count() > 0:
                     toc_summary_str += '<ul>'
@@ -760,7 +760,7 @@ class ReportEPUB():
         with open(self.base_path + '/OEBPS/Text/book_cover.xhtml','a+', encoding='utf-8') as cover:
             cover.write(xml_str)
 
-    # 生成文档目录.ncx文件
+    # 生成手册目录.ncx文件
     def generate_toc_ncx(self):
         ncx = '''
         <?xml version='1.0' encoding='utf-8'?>
@@ -781,7 +781,7 @@ class ReportEPUB():
         with open(self.base_path+'/OEBPS/toc.ncx','a+',encoding='utf-8') as file:
             file.write(ncx)
 
-    # 生成文档目录toc_summary.html文件
+    # 生成手册目录toc_summary.html文件
     def generate_toc_html(self):
         summary = '''<?xml version="1.0" encoding="UTF-8"?>
             <html lang="zh-CN">
@@ -914,7 +914,7 @@ class ReportPDF():
                         </head>
                         <body>
                             <div style="position: fixed;font-size:8px; bottom: 5px; right: 10px; background: red; z-index: 10000">
-                                本文档由电子手册生成
+                                本手册由电子手册生成
                             </div>
                             <div style="text-align:center;margin-top:400px;">
                                 <h1>{project_name}</h1>
@@ -962,20 +962,20 @@ class ReportPDF():
             project = Project.objects.get(pk=self.pro_id)
         except:
             return
-        # 拼接文档的HTML字符串
+        # 拼接手册的HTML字符串
         data = Doc.objects.filter(top_doc=self.pro_id,parent_doc=0).order_by("sort")
         toc_list = {'1':[],'2':[],'3':[]}
         for d in data:
             self.content_str += "<h1 style='page-break-before: always;'>{}</h1>\n\n".format(d.name)
             self.content_str += d.pre_content + '\n'
             toc_list['1'].append({'id':d.id,'name':d.name})
-            # 获取第二级文档
+            # 获取第二级手册
             data_2 = Doc.objects.filter(parent_doc=d.id).order_by("sort")
             for d2 in data_2:
                 self.content_str += "\n\n<h1 style='page-break-before: always;'>{}</h1>\n\n".format(d2.name)
                 self.content_str += d2.pre_content + '\n'
                 toc_list['2'].append({'id':d2.id,'name':d2.name,'parent':d.id})
-                # 获取第三级文档
+                # 获取第三级手册
                 data_3 = Doc.objects.filter(parent_doc=d2.id).order_by("sort")
                 for d3 in data_3:
                     # print(d3.name,d3.content)
@@ -1031,17 +1031,17 @@ class ReportPDF():
             #     output.addPage(page)  # 添加一页
             #     page_content = high_level.extract_text(report_file_path, page_numbers=[p])  # 提取某页的文本
             #     first_line_text = page_content.split('\n') # 获取某页的第一行文本
-            #     # 添加第一层级文档书签
+            #     # 添加第一层级手册书签
             #     for i1 in toc_list['1']:
             #         if i1['name'] in first_line_text:
             #             bookmark_1 = output.addBookmark(i1['name'], p, parent=None)  # 添加书签
             #         else:
             #             bookmark_1 = None
-            #     # 添加第二层文档书签
+            #     # 添加第二层手册书签
             #     for i2 in toc_list['2']:
             #         if i2['name'] in first_line_text:
             #             bookmark_2 = output.addBookmark(i2['name'], p, parent=bookmark_1)  # 添加书签
-            #     # 添加第三层文档书签
+            #     # 添加第三层手册书签
             #     for i3 in toc_list['3']:
             #         if i3['name'] in first_line_text:
             #             bookmark_3 = output.addBookmark(i3['name'], p, parent=bookmark_2)  # 添加书签
@@ -1172,12 +1172,12 @@ class ReportDocx():
             # print(d.name,d.content)
             self.content_str += "<h1 style='page-break-before: always;'>{}</h1>".format(d.name)
             self.content_str += d.content
-            # 获取第二级文档
+            # 获取第二级手册
             data_2 = Doc.objects.filter(parent_doc=d.id).order_by("sort")
             for d2 in data_2:
                 self.content_str += "<h1>{}</h1>".format(d2.name)
                 self.content_str += d2.content
-                # 获取第三级文档
+                # 获取第三级手册
                 data_3 = Doc.objects.filter(parent_doc=d2.id).order_by("sort")
                 for d3 in data_3:
                     # print(d3.name,d3.content)

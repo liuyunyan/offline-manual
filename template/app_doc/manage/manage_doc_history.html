@@ -1,7 +1,7 @@
 {% extends 'app_doc/user/user_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}{% trans "文档历史版本管理" %}{% endblock %}
+{% block title %}{% trans "手册历史版本管理" %}{% endblock %}
 {% block content %}
 <div class="layui-card">
     <div class="layui-card-body">
@@ -18,7 +18,7 @@
     <div class="layui-card-body">
         <div class="layui-card-header">
         <div class="layui-row">
-            <span style="font-size:18px;">{% trans "文档：" %}{{doc.name}} {% trans "的历史版本管理" %}</span>
+            <span style="font-size:18px;">{% trans "手册：" %}{{doc.name}} {% trans "的历史版本管理" %}</span>
         </div>
         </div>
         <div class="layui-row" >
@@ -95,7 +95,7 @@
             title:'删除历史记录',
             area:'300px;',
             id:'delPro',//配置ID
-            content:'<div style="margin-left:10px;">警告：操作将删除此文档历史版本记录！</div>',
+            content:'<div style="margin-left:10px;">警告：操作将删除此手册历史版本记录！</div>',
             btn:['确定','取消'], //添加按钮
             btnAlign:'c', //按钮居中
             yes:function (index,layero) {

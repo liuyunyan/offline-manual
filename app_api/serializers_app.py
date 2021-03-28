@@ -16,7 +16,7 @@ class ProjectSerializer(ModelSerializer):
         model = Project
         fields = ('__all__')
 
-# 文档序列化器
+# 手册序列化器
 class DocSerializer(ModelSerializer):
 
     project_name = SerializerMethodField(label="所属文集")
@@ -26,12 +26,12 @@ class DocSerializer(ModelSerializer):
         model = Doc
         fields = ('__all__')
 
-    # 返回文档的所属文集
+    # 返回手册的所属文集
     def get_project_name(self,obj):
         pro_name = Project.objects.get(id=obj.top_doc).name
         return pro_name
 
-# 文档模板序列化器
+# 手册模板序列化器
 class DocTempSerializer(ModelSerializer):
     class Meta:
         model = DocTemp

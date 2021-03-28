@@ -34,7 +34,7 @@
             <form method="get" action="">
             <div class="layui-input-inline">
                 <input class="layui-input mrdoc-search-input" 
-                    placeholder="搜索文集或文档" name="kw" style="width: 500px;border-radius:5px" value="{{kw}}"/>
+                    placeholder="搜索文集或手册" name="kw" style="width: 500px;border-radius:5px" value="{{kw}}"/>
                 <input name="type" value="{{search_type}}" hidden>
                 <button type="submit" 
                     style="position: absolute;top:12px;right: 8px;border: none;background-color: white;">
@@ -94,7 +94,8 @@
                 </a>
                 <dl class="layui-nav-child">
                 <!-- <dd><a href="">基本资料</a></dd> -->
-                    {% if close_register == 'on' %}
+                    {% if True %}
+                    <!-- close_register == 'on' -->
                     <dd><a href="{% url 'login' %}">{% trans "登录" %}</a></dd>
                     {% else %}
                     <dd><a href="{% url 'register' %}">{% trans "注册" %}</a></dd>
@@ -117,7 +118,7 @@
             <div class="layui-inline">
                 <div class="layui-input-inline">
                     <input class="layui-input mrdoc-search-input" 
-                    placeholder="搜索文集或文档" name="kw" style="border-radius:5px" value="{{kw}}"/>
+                    placeholder="搜索文集或手册" name="kw" style="border-radius:5px" value="{{kw}}"/>
                     <input name="type" value="{{search_type}}" hidden>
                 </div>
                 <div class="layui-input-inline">
@@ -138,9 +139,9 @@
             <div class="layui-form-item">
                 <!-- 筛选开始 -->
                 <div class="layui-inline">
-                    <!-- 文档搜索 -->
+                    <!-- 手册搜索 -->
                     <div class="layui-input-inline" style="width: inherit;">
-                        <a href="{% url 'doc_search' %}?q={{kw}}&d_range={{d_range}}" class="search_type" id="search_doc"><i class="layui-icon layui-icon-search"></i>{% trans "文档" %}</a>
+                        <a href="{% url 'doc_search' %}?q={{kw}}&d_range={{d_range}}" class="search_type" id="search_doc"><i class="layui-icon layui-icon-search"></i>{% trans "手册" %}</a>
                         <a href="{% url 'search' %}?kw={{kw}}&type=pro&d_range={{d_range}}" class="search_type" id="search_project"><i class="layui-icon layui-icon-list"></i>{% trans "文集" %}</a>
                         <!-- <a href="{% url 'search' %}?kw={{kw}}&type=tag&d_range={{d_range}}" class="search_type" id="search_tag"><i class="layui-icon layui-icon-note"></i>{% trans "标签" %}</a> -->
                     </div>
@@ -184,7 +185,7 @@
 <!-- 主体 -->
 <div class="layui-container search_result" id="search_result" style="padding: 0 20px;">
     <!-- 遍历搜索结果列表 -->
-    <!-- 文档搜索结果 -->
+    <!-- 手册搜索结果 -->
     {% if search_type == 'doc' %}
         {% load doc_filter %}
         {% for result in datas %}

@@ -21,7 +21,7 @@
         <i class="fa fa-user"></i> {{ tag.create_user }}
     </span>
 
-    <!-- <button id="share" class="doc-bottom-btn" tooltip="分享本文档">
+    <!-- <button id="share" class="doc-bottom-btn" tooltip="分享本手册">
         <i class="fa fa-share-alt" ></i> {% trans "分享" %}
     </button> -->
 </div>
@@ -42,9 +42,9 @@
         $(".sidebar").toggleClass("doc-toc-hide");
         // },300)
     }
-    // 切换文档目录显示与否
+    // 切换手册目录显示与否
     $(".tocMenu").click(function() {
-        console.log("隐藏文档目录")
+        console.log("隐藏手册目录")
         $(".sidebar").toggleClass("doc-toc-hide");
     });
     
@@ -53,7 +53,7 @@
         e.target.target = '_blank';
     });
 
-    // 显示文档下载弹出框
+    // 显示手册下载弹出框
     $("#download_doc").click(function(r){
         var layer = layui.layer;
         layer.open({
@@ -74,7 +74,7 @@
     // 指定图表的配置项和数据
     var option = {
         // title: {
-        //     text: "标签：{{tag.name}} 文档关系网络图",
+        //     text: "标签：{{tag.name}} 手册关系网络图",
         //     top: "top",
         //     left: "left"
         // },

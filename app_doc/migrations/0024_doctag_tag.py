@@ -34,8 +34,8 @@ class Migration(migrations.Migration):
                 ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_doc.Tag')),
             ],
             options={
-                'verbose_name': '文档标签',
-                'verbose_name_plural': '文档标签',
+                'verbose_name': '手册标签',
+                'verbose_name_plural': '手册标签',
             },
         ),
     ]

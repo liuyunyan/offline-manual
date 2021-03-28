@@ -60,14 +60,14 @@ def user_center_menu(request):
                     "openType": "_iframe",
                     "href": reverse('manage_project')
                 },
-                {
-                    "id": "manage_colla_self",
-                    "title": "我的协作",
-                    "icon": "layui-icon layui-icon-console",
-                    "type": 1,
-                    "openType": "_iframe",
-                    "href": reverse('manage_pro_colla_self')
-                },
+                # {
+                #     "id": "manage_colla_self",
+                #     "title": "我的协作",
+                #     "icon": "layui-icon layui-icon-console",
+                #     "type": 1,
+                #     "openType": "_iframe",
+                #     "href": reverse('manage_pro_colla_self')
+                # },
                 {
                     "id": "import_project",
                     "title": "导入文集",
@@ -80,7 +80,7 @@ def user_center_menu(request):
         },
         {
             "id": "my_doc",
-            "title": "我的文档",
+            "title": "我的手册",
             "icon": "layui-icon layui-icon-file-b",
             "type": 0,
             "href": "",
@@ -95,7 +95,7 @@ def user_center_menu(request):
                 },
                 {
                     "id": "doc_template",
-                    "title": "文档模板",
+                    "title": "手册模板",
                     "icon": "layui-icon layui-icon-face-cry",
                     "type": 1,
                     "openType": "_iframe",
@@ -103,7 +103,7 @@ def user_center_menu(request):
                 },
                 {
                     "id": "doc_tag",
-                    "title": "文档标签",
+                    "title": "手册标签",
                     "icon": "layui-icon layui-icon-face-cry",
                     "type": 1,
                     "openType": "_iframe",
@@ -119,7 +119,7 @@ def user_center_menu(request):
                 # },
                 {
                     "id": "doc_recycle",
-                    "title": "文档回收站",
+                    "title": "手册回收站",
                     "icon": "layui-icon layui-icon-face-cry",
                     "type": 1,
                     "openType": "_iframe",

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='doc',
             name='content',
-            field=models.TextField(blank=True, null=True, verbose_name='文档内容'),
+            field=models.TextField(blank=True, null=True, verbose_name='手册内容'),
         ),
         migrations.AlterField(
             model_name='doc',

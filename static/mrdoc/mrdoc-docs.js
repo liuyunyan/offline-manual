@@ -1,6 +1,6 @@
 /*
     ########################################################
-    ### 文集、文档等前台浏览页面通用JavaScript函数和变量定义 ###
+    ### 文集、手册等前台浏览页面通用JavaScript函数和变量定义 ###
     ########################################################
 */
 
@@ -21,19 +21,19 @@ tagCurrentDoc = function(){
         if (lochref.indexOf(mehref) != -1) {
             // console.log($me,lochref,mehref)
             $me.closest("li").addClass("active");
-            // 展开当前文档的下级目录
+            // 展开当前手册的下级目录
             if($me.parent().next("ul.sub-menu").hasClass("toc-close")){
                 // console.log("展开下级目录")
                 $me.parent().next("ul.sub-menu").toggleClass("toc-close");
                 $me.next("i").toggleClass("layui-icon-left layui-icon-down");
             }
-            // 展开当前文档的所有上级目录
+            // 展开当前手册的所有上级目录
             if($me.parent("li").parent('ul.sub-menu').hasClass("toc-close")){
-                // console.log("展开二级文档目录")
+                // console.log("展开二级手册目录")
                 $me.parent("li").parent('ul.sub-menu').toggleClass("toc-close");
             }
             if($me.parent("div").parent('li').parent('ul.sub-menu').hasClass("toc-close")){
-                // console.log("展开包含下级的二级文档目录")
+                // console.log("展开包含下级的二级手册目录")
                 $me.parent("div").parent('li').parent('ul.sub-menu').toggleClass("toc-close");
             }
             if($me.parent("li").parent('ul').parent('li').parent('ul.sub-menu').hasClass("toc-close")){
@@ -47,7 +47,7 @@ tagCurrentDoc = function(){
                     $link.children("i").toggleClass("layui-icon-left layui-icon-down");
                 }
             })
-            // 目录的当前文档滚动于目录顶端
+            // 目录的当前手册滚动于目录顶端
             this.scrollIntoView({ behavior: 'auto', block: "start" });
         } else {
             // console.log(lochref,mehref)
@@ -76,7 +76,7 @@ function changeSidebar(){
         $("body").removeClass("big-page");
     }
 };
-// 监听文档div点击
+// 监听手册div点击
 document.querySelector('.doc-body').addEventListener('click', function (e) {
     var screen_width = window.matchMedia('(max-width: 768px)');
     // 小屏下收起左侧文集大纲
@@ -178,7 +178,7 @@ $(document).ready(function() {
 $(function(){
     $('.font-switch').click(switchFont);
 });
-//切换文档内容字体类型
+//切换手册内容字体类型
 function switchFont(){
     if(font_stauts == 'serif'){
         $(".doc-content").toggleClass("switch-font")
@@ -236,13 +236,13 @@ $("#dashang").click(function(r){
 });
 
 /*
-    右侧文档目录
+    右侧手册目录
 */
 $(function(){
     // $(".switch-toc").click(SwitchToc);
     $("body").on('click','.switch-toc',SwitchToc)
 });
-// 切换文档目录
+// 切换手册目录
 function SwitchToc(i){
     console.log("点击了")
     var $me = $(this);
@@ -250,7 +250,7 @@ function SwitchToc(i){
     $(this).toggleClass("layui-icon-left layui-icon-down");//切换图标
 };
 
-// 展开文档树
+// 展开手册树
 function openDocTree(){
     $("nav ul.summary ul").each(function(obj){
         console.log(obj,this)
@@ -259,7 +259,7 @@ function openDocTree(){
     })
     
 };
-// 收起文档树
+// 收起手册树
 function closeDocTree(){
     $("nav ul.summary ul").each(function(obj){
         console.log(obj,this)
@@ -269,7 +269,7 @@ function closeDocTree(){
 };
 
 /*
-    文档分享
+    手册分享
 */
 // 显示分享弹出框
 $("#share").click(function(r){
@@ -283,7 +283,7 @@ $("#share").click(function(r){
         content: $('#share_div')
       });
 });
-// 复制文档链接
+// 复制手册链接
 copyUrl = function(){
     var crt_url_val = document.getElementById("copy_crt_url");
     crt_url_val.select();
@@ -294,7 +294,7 @@ copyUrl = function(){
 $("#copy_doc_url").click(function(){
     copyUrl();
 })
-// 生成文档链接二维码
+// 生成手册链接二维码
 doc_qrcode = function(){
     new QRCode("url_qrcode", {
         text: document.URL,
@@ -333,6 +333,6 @@ textBecomeImg = function(text,fontsize,fontcolor){
 
 /*
     ########################################################
-    ### 文档阅读页面JavaScript函数和变量定义 ###
+    ### 手册阅读页面JavaScript函数和变量定义 ###
     ########################################################
 */

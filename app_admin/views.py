@@ -230,12 +230,12 @@ def admin_overview(request):
         user_cnt = User.objects.all().count()
         # 文集数
         pro_cnt = Project.objects.all().count() # 文集总数
-        # 文档数
-        doc_cnt = Doc.objects.all().count() # 文档总数
+        # 手册数
+        doc_cnt = Doc.objects.all().count() # 手册总数
         total_tag_cnt = Tag.objects.filter(create_user=request.user).count()
         img_cnt = Image.objects.filter(user=request.user).count()
         attachment_cnt = Attachment.objects.filter(user=request.user).count()
-        # 文档动态
+        # 手册动态
         doc_active_list = Doc.objects.all().order_by('-modify_time')[:5]
 
         return render(request,'app_admin/admin_overview.html',locals())
@@ -355,7 +355,7 @@ def admin_del_user(request):
             colloas = ProjectCollaborator.objects.filter(user=user) # 获取参与协作的文集
             # 遍历用户参与协作的文集
             for colloa in colloas:
-                # 查询出用户协作创建的文档，修改作者为文集所有者
+                # 查询出用户协作创建的手册，修改作者为文集所有者
                 Doc.objects.filter(
                     top_doc=colloa.project.id,create_user=user
                 ).update(create_user=colloa.project.create_user)
@@ -449,26 +449,26 @@ def admin_project_role(request,pro_id):
             return Http404
 
 
-# 后台管理 - 文档管理
+# 后台管理 - 手册管理
 @superuser_only
 @logger.catch()
 def admin_doc(request):
     if request.method == 'GET':
         # 文集列表
         project_list = Project.objects.all()  # 自己创建的文集列表
-        # 文档数量
-        # 已发布文档数量
+        # 手册数量
+        # 已发布手册数量
         published_doc_cnt = Doc.objects.filter(status=1).count()
-        # 草稿文档数量
+        # 草稿手册数量
         draft_doc_cnt = Doc.objects.filter(status=0).count()
-        # 所有文档数量
+        # 所有手册数量
         all_cnt = published_doc_cnt + draft_doc_cnt
         return render(request,'app_admin/admin_doc.html',locals())
     elif request.method == 'POST':
         kw = request.POST.get('kw', '')
         project = request.POST.get('project', '')
         status = request.POST.get('status', '')
-        if status == '-1':  # 全部文档
+        if status == '-1':  # 全部手册
             q_status = [0, 1]
         elif status in ['0', '1']:
             q_status = [int(status)]
@@ -500,12 +500,12 @@ def admin_doc(request):
         project_list = Project.objects.filter(create_user=request.user)  # 自己创建的文集列表
         colla_project_list = ProjectCollaborator.objects.filter(user=request.user)  # 协作的文集列表
 
-        # 文档数量
-        # 已发布文档数量
+        # 手册数量
+        # 已发布手册数量
         published_doc_cnt = Doc.objects.filter(create_user=request.user, status=1).count()
-        # 草稿文档数量
+        # 草稿手册数量
         draft_doc_cnt = Doc.objects.filter(create_user=request.user, status=0).count()
-        # 所有文档数量
+        # 所有手册数量
         all_cnt = published_doc_cnt + draft_doc_cnt
 
         # 分页处理
@@ -543,7 +543,7 @@ def admin_doc(request):
         return JsonResponse(resp_data)
 
 
-# 后台管理 - 文档模板管理
+# 后台管理 - 手册模板管理
 @superuser_only
 @logger.catch()
 def admin_doctemp(request):
@@ -830,7 +830,7 @@ def admin_setting(request):
                 email_ssl = email_settings.get(name="smtp_ssl")
                 email_pwd = email_settings.get(name="pwd")
             return render(request, 'app_admin/admin_setting.html',locals())
-        # 文档全局设置
+        # 手册全局设置
         elif types == 'doc':
             # iframe白名单
             iframe_whitelist = request.POST.get('iframe_whitelist','')
@@ -915,7 +915,7 @@ def admin_center_menu(request):
         },
         {
             "id": 4,
-            "title": "文档模板管理",
+            "title": "手册模板管理",
             "type": 1,
             "icon": "layui-icon layui-icon-templeate-1",
             "href": reverse('doctemp_manage'),

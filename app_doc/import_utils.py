@@ -72,7 +72,7 @@ class ImportZipProject():
                         with open(os.path.join(self.temp_dir,f),'r',encoding='utf-8') as md_file:
                             md_content = md_file.read()
                             md_content = self.operat_md_media(md_content,create_user)
-                            # 新建文档
+                            # 新建手册
                             doc = Doc.objects.create(
                                 name = f[:-3],
                                 pre_content = md_content,
@@ -145,7 +145,7 @@ class ImportZipProject():
             return md_content
 
 
-# 导入Word文档(.docx)
+# 导入Word手册(.docx)
 class ImportDocxDoc():
     def __init__(self,docx_file_path,editor_mode,create_user):
         self.docx_file_path = docx_file_path # docx文件绝对路径
@@ -181,7 +181,7 @@ class ImportDocxDoc():
     def convert_docx(self):
         # 读取Word文件
         with open(self.docx_file_path, "rb") as docx_file:
-            # 转化Word文档为HTML
+            # 转化Word手册为HTML
             result = mammoth.convert_to_html(docx_file, convert_image=mammoth.images.img_element(self.convert_img))
             # 获取HTML内容
             html = result.value
@@ -203,4 +203,4 @@ class ImportDocxDoc():
 
 if __name__ == '__main__':
     imp = ImportZipProject()
-    imp.read_zip(r"D:\Python XlsxWriter模块中文文档_2020-06-16.zip")
+    imp.read_zip(r"D:\Python XlsxWriter模块中文手册_2020-06-16.zip")

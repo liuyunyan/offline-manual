@@ -71,7 +71,7 @@ def import_project(request):
             return JsonResponse({'status':False,'data':'参数错误'})
 
 
-# 文集文档排序
+# 文集手册排序
 @login_required()
 @require_http_methods(['POST'])
 def project_doc_sort(request):
@@ -79,13 +79,13 @@ def project_doc_sort(request):
     title = request.POST.get('title',None) # 文集名称
     desc = request.POST.get('desc',None) # 文集简介
     role = request.POST.get('role',1) # 文集权限
-    sort_data = request.POST.get('sort_data','[]') # 文档排序列表
-    doc_status = request.POST.get('status',0) # 文档状态
+    sort_data = request.POST.get('sort_data','[]') # 手册排序列表
+    doc_status = request.POST.get('status',0) # 手册状态
     # print(sort_data)
     try:
         sort_data = json.loads(sort_data)
     except Exception:
-        return JsonResponse({'status':False,'data':'文档参数错误'})
+        return JsonResponse({'status':False,'data':'手册参数错误'})
 
     try:
         Project.objects.get(id=project_id,create_user=request.user)
@@ -98,19 +98,19 @@ def project_doc_sort(request):
         intro = desc,
         role = role
     )
-    # 文档排序
+    # 手册排序
     n = 10
-    # 第一级文档
+    # 第一级手册
     for data in sort_data:
         Doc.objects.filter(id=data['id']).update(sort = n,status=doc_status)
         n += 10
-        # 存在第二级文档
+        # 存在第二级手册
         if 'children' in data.keys():
             n1 = 10
             for c1 in data['children']:
                 Doc.objects.filter(id=c1['id']).update(sort = n1,parent_doc=data['id'],status=doc_status)
                 n1 += 10
-                # 存在第三级文档
+                # 存在第三级手册
                 if 'children' in c1.keys():
                     n2 = 10
                     for c2 in c1['children']:
@@ -119,7 +119,7 @@ def project_doc_sort(request):
     return JsonResponse({'status':True,'data':'ok'})
 
 
-# 导入docx文档
+# 导入docx手册
 @login_required()
 @csrf_exempt
 @require_POST

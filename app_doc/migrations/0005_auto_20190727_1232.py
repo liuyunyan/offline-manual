@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='doc',
-            options={'ordering': ['create_time', '-sort'], 'verbose_name': '文档', 'verbose_name_plural': '文档'},
+            options={'ordering': ['create_time', '-sort'], 'verbose_name': '手册', 'verbose_name_plural': '手册'},
         ),
         migrations.AddField(
             model_name='doc',

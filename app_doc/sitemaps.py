@@ -27,7 +27,7 @@ class ProjectSitemap(Sitemap):
     def items(self):
         return Project.objects.filter(role=0)
 
-# 文档地图
+# 手册地图
 class DocSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.8

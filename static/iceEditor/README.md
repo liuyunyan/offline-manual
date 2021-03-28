@@ -3,7 +3,7 @@
 
 #### 官方
 + iceEditor 官方网站 [https://www.iceui.net/iceEditor.html](https://www.iceui.net/iceEditor.html)
-+ iceEditor 示例文档 [https://www.iceui.net/iceEditor/doc.html](https://www.iceui.net/iceEditor/doc.html)
++ iceEditor 示例手册 [https://www.iceui.net/iceEditor/doc.html](https://www.iceui.net/iceEditor/doc.html)
 
 #### 介绍
 iceEditor是一款简约风格的富文本编辑器，体型十分娇小，无任何依赖，整个编辑器只有一个文件，功能却很不平凡！简约的唯美设计，简洁、极速、使用它的时候不需要引用jQuery、font、css……等文件，因为整个编辑器只是一个Js，支持上传图片、附件！支持添加音乐、视频！

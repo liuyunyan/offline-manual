@@ -30,7 +30,7 @@ layui.define(['jquery','layer','form'], function(exports) {
         ICON_HIDE = "dtree-icon-hide",  //隐藏图标
         $BODY = $("body"),				//body选择器
         $WIN = $(window),				//window窗口
-        $DOC = $(document),				//当前文档
+        $DOC = $(document),				//当前手册
         MOD_NAME = "dtree",				//模块名称
         VERSION = "v2.5.6",				//版本
         OPTIONS = {},					//全局属性配置

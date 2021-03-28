@@ -1,22 +1,22 @@
 # coding:utf-8
-# 文档自定义模板过滤器
+# 手册自定义模板过滤器
 from app_doc.models import *
 from django import template
 
 register = template.Library()
 
 
-# 获取文集下的文档数量
+# 获取文集下的手册数量
 @register.filter(name='get_doc_count')
 def get_doc_count(value):
     return Doc.objects.filter(top_doc=int(value),status__in=[0,1]).count()
 
-# 获取文集下最新的文档及其修改时间
+# 获取文集下最新的手册及其修改时间
 @register.filter(name='get_new_doc')
 def get_new_doc(value):
     new_doc = Doc.objects.filter(top_doc=int(value),status=1).order_by('-modify_time')[:3]
     if new_doc is None:
-        new_doc = '它还没有文档……'
+        new_doc = '它还没有手册……'
     return new_doc
 
 # 获取文集的EPUB开放导出状态
@@ -53,7 +53,7 @@ def get_project_collaborator_cnt(value):
     cnt = ProjectCollaborator.objects.filter(project=value).count()
     return cnt
 
-# 获取标签的文档数量
+# 获取标签的手册数量
 @register.filter(name='tag_doc_cnt')
 def get_img_group_cnt(value):
     cnt = DocTag.objects.filter(tag=value).count()

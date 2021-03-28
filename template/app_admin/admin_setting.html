@@ -19,7 +19,7 @@
           <ul class="layui-tab-title">
             <li class="layui-this">基础设置</li>
             <!-- <li>邮箱设置</li> -->
-            <li>文档设置</li>
+            <li>手册设置</li>
           </ul>
           <div class="layui-tab-content">
               <!-- 网站设置 -->
@@ -129,7 +129,7 @@
                     <div class="layui-input-inline">
                       <input type="checkbox" name="img_scale" lay-skin="switch" lay-text="开启|关闭"  {% if img_scale %}checked{% endif %}>
                     </div>
-                    <div class="layui-form-mid layui-word-aux">开启后文档中的图片将显示为最大宽度350px的缩略图</div>
+                    <div class="layui-form-mid layui-word-aux">开启后手册中的图片将显示为最大宽度350px的缩略图</div>
                   </div>
                   <hr>
 
@@ -143,20 +143,20 @@
                    <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">广告位1</label>
                     <div class="layui-input-block">
-                      <textarea name="ad_code" placeholder="如果需要在文档正文上方添加广告，请将广告相关代码输入至此，可以包含<script>标签" class="layui-textarea">{{ad_code}}</textarea>
+                      <textarea name="ad_code" placeholder="如果需要在手册正文上方添加广告，请将广告相关代码输入至此，可以包含<script>标签" class="layui-textarea">{{ad_code}}</textarea>
                     </div>
                   </div>
                   <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">广告位2</label>
                     <div class="layui-input-block">
-                      <textarea name="ad_code_2" placeholder="此广告位位于文档下方、分享按钮上方，可以包含<script>标签" class="layui-textarea">{{ad_code_2}}</textarea>
+                      <textarea name="ad_code_2" placeholder="此广告位位于手册下方、分享按钮上方，可以包含<script>标签" class="layui-textarea">{{ad_code_2}}</textarea>
                     </div>
                   </div>
 
                   <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">广告位3</label>
                     <div class="layui-input-block">
-                      <textarea name="ad_code_3" placeholder="此广告位位于文档左侧目录栏下方，可以包含<script>标签" class="layui-textarea">{{ad_code_3}}</textarea>
+                      <textarea name="ad_code_3" placeholder="此广告位位于手册左侧目录栏下方，可以包含<script>标签" class="layui-textarea">{{ad_code_3}}</textarea>
                     </div>
                   </div> -->
 
@@ -225,7 +225,7 @@
             </div> -->
               <!-- 邮箱设置结束 -->
 
-              <!-- 全局文档设置 -->
+              <!-- 全局手册设置 -->
             <div class="layui-tab-item">
               <form action="" method="post" class="layui-form">
                 {% csrf_token %}
@@ -272,12 +272,12 @@
     
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                      <button class="layui-btn layui-btn-normal layui-btn-sm" lay-submit lay-filter="formDemo">保存文档配置</button>
+                      <button class="layui-btn layui-btn-normal layui-btn-sm" lay-submit lay-filter="formDemo">保存手册配置</button>
                     </div>
                 </div>
             </form>
             </div>
-              <!-- 全局文档设置结束 -->
+              <!-- 全局手册设置结束 -->
           </div>
         </div>
     </div>

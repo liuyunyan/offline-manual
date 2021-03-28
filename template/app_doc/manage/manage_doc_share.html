@@ -1,7 +1,7 @@
 {% extends 'app_doc/user/user_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}{% trans "文档分享管理" %}{% endblock %}
+{% block title %}{% trans "手册分享管理" %}{% endblock %}
 {% block content %}
 
 <div class="layui-card">
@@ -65,10 +65,10 @@
         delTemp = function(doctemp_id){
             layer.open({
                 type:1,
-                title:'删除文档',
+                title:'删除手册',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将删除此文档模板！</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将删除此手册模板！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
@@ -94,7 +94,7 @@
         let cols = [
                 [
                     {type: 'checkbox'},
-                    {title: '文档名称',field: 'doc_name',align: 'left'},
+                    {title: '手册名称',field: 'doc_name',align: 'left'},
                     {title: '分享类型',field: 'share_type',align: 'left',width: 100,templet:"#share-type"},
                     {title: '分享码',field: 'share_value',align: 'left',width: 100},
                     {title: '分享时间',field: 'create_time',align: 'left',width: 150,templet:"#share-create-time"},

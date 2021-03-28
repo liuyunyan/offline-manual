@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='doc',
             name='path',
-            field=models.CharField(default=1, max_length=50, verbose_name='文档路径'),
+            field=models.CharField(default=1, max_length=50, verbose_name='手册路径'),
             preserve_default=False,
         ),
     ]

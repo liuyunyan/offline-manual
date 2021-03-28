@@ -39,7 +39,7 @@
 <div class="doc layui-fluid" style="padding-left:0px;">
     <!-- 左侧目录栏 -->
     <div class="doc-summary">
-        <!-- 文档搜索 -->
+        <!-- 手册搜索 -->
         <form action="" method="get">
             <div id="doc-search-input">
                 <input type="text" name="kw" placeholder="输入并回车搜索" value="" class="layui-input doc-search-input">
@@ -49,7 +49,7 @@
         <div class="project-title">
             <i class="fa fa-tag"></i> {% trans "标签：" %}<a href="{% url 'tag_docs' tag.id %}">{{ tag.name }}
                 {% if project.role == 1 %}
-                    <i class="layui-icon layui-icon-password" title="私密文档"></i>
+                    <i class="layui-icon layui-icon-password" title="私密手册"></i>
                 {% endif %}
             </a>
         </div>
@@ -83,9 +83,9 @@
     </div>
     <!-- 左侧目录栏结束 -->
 
-    <!-- 右侧文档栏 -->
+    <!-- 右侧手册栏 -->
     <div class="doc-body">
-        <!-- 文档导航 -->
+        <!-- 手册导航 -->
         <div class="doc-header" role="navigation">
             <a class="btn pull-left js-toolbar-action" aria-label="" href="javascript:void(0);" title="切换侧边栏">
                 <i class="fa fa-align-justify"></i>
@@ -107,10 +107,10 @@
                 <i class="fa fa-home"></i> <span class="layui-hide-xs">{% trans "首页" %}</span>
             </a>
         </div>
-        <!-- 文档主体 -->
+        <!-- 手册主体 -->
         <div class="doc-body-content">
             <div class="doc-body-content-div">
-                <!-- 文档内容 -->
+                <!-- 手册内容 -->
                 <div class="doc-content">
                     <!-- 标题 -->
                     <div class="doc-info">
@@ -162,7 +162,7 @@
             </div>
         </div>
     </div>
-    <!-- 右侧文档栏结束 -->
+    <!-- 右侧手册栏结束 -->
     <div class="toTop"><i class="layui-icon layui-icon-top" style="font-size: 40px;"></i></div>
     {% block right_widget %} {% endblock %}
 </div>
@@ -183,34 +183,34 @@
                 var toc_str = ""
                 layui.each(r.data,function(index,item){
                     toc_str += "<li>"
-                    if(item['children'] != undefined){ // 存在二级文档
+                    if(item['children'] != undefined){ // 存在二级手册
                         li = '<div style="display:flex;justify-content:space-between;">' + 
                             '<a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a>' +
                             '<i class="fa fa-chevron-left switch-toc" style="padding:15px;"></i>'+
                         '</div>'+
                         '<ul class="sub-menu toc-close">'
                         toc_str += li
-                        layui.each(item['children'],function(index,item){// 遍历二级文档
+                        layui.each(item['children'],function(index,item){// 遍历二级手册
                             toc_str += '<li>'
-                            if(item['children'] != undefined){ //存在三级文档
+                            if(item['children'] != undefined){ //存在三级手册
                                 li = '<div style="display:flex;justify-content:space-between;">' + 
                                     '<a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a>' +
                                     '<i class="fa fa-chevron-left switch-toc" style="padding:15px;"></i>'+
                                 '</div>'+'<ul class="sub-menu toc-close">'
                                 toc_str += li
-                                layui.each(item['children'],function(index,item){ // 遍历三级文档
+                                layui.each(item['children'],function(index,item){ // 遍历三级手册
                                     li = '<li><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></li>'
                                     toc_str += li
                                 })
                                 toc_str += '</ul>'
-                            }else{// 不存在三级文档
+                            }else{// 不存在三级手册
                                 li = '<a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a>'
                                 toc_str += li
                             }
                             toc_str += '</li>'
                         })    
                         toc_str += '</ul>'
-                    }else{//不存在二级文档
+                    }else{//不存在二级手册
                        li = '<a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a>'
                        toc_str += li
                     }
@@ -234,7 +234,7 @@
             if (lochref.indexOf(mehref) != -1) {
                 // console.log($me,lochref,mehref)
                 $me.closest("li").addClass("active");
-                //展开当前文档的上级目录
+                //展开当前手册的上级目录
                 $me.parent("li").parent('ul.sub-menu').toggleClass("toc-close toc-open"); //展开二级目录
                 $me.parent("div").parent('li').parent('ul.sub-menu').toggleClass("toc-close toc-open"); //展开还有子级的二级目录
                 $me.parent("li").parent('ul').parent('li').parent('ul.sub-menu').toggleClass("toc-close toc-open"); //展开三级目录
@@ -372,7 +372,7 @@
 
 <!-- 切换内容字体 -->
 <script>
-    //切换文档内容字体类型
+    //切换手册内容字体类型
     $(function(){
         $('.font-switch').click(switchFont);
     });
@@ -504,7 +504,7 @@
         $(this).toggleClass("fa-chevron-left fa-chevron-down");//切换图标
     };
 
-    // 展开文档树
+    // 展开手册树
     function openDocTree(){
         $("nav ul.summary ul").each(function(obj){
             console.log(obj,this)
@@ -513,7 +513,7 @@
         })
         
     };
-    // 收起文档树
+    // 收起手册树
     function closeDocTree(){
         $("nav ul.summary ul").each(function(obj){
             console.log(obj,this)
@@ -521,7 +521,7 @@
             $(this).prev().children('i').toggleClass("fa-chevron-left fa-chevron-down");//切换图标
         })
     };
-    // 文档分享 - 复制链接
+    // 手册分享 - 复制链接
     copyUrl = function(){
         var crt_url_val = document.getElementById("copy_crt_url");
         crt_url_val.select();

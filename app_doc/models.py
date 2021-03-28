@@ -36,7 +36,7 @@ class Project(models.Model):
 class ProjectCollaborator(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE) # 文集
     user = models.ForeignKey(User,on_delete=models.CASCADE) # 用户
-    # 用户的协作模式：0表示可新建文档，可修改、删除自己新建的文档，1表示可新建文档，可删除自己创建的文档、可修改所有文档
+    # 用户的协作模式：0表示可新建手册，可修改、删除自己新建的手册，1表示可新建手册，可删除自己创建的手册、可修改所有手册
     role = models.IntegerField(choices=((0,0),(1,1)),default=0,verbose_name='协作模式')
     create_time = models.DateTimeField(auto_now=True,verbose_name='添加时间')
     modify_time = models.DateTimeField(auto_now_add=True,verbose_name='修改时间')
@@ -52,7 +52,7 @@ class ProjectCollaborator(models.Model):
 # 文集目录模型
 class ProjectToc(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
-    value = models.TextField(verbose_name="文集文档层级目录")
+    value = models.TextField(verbose_name="文集手册层级目录")
 
     def __str__(self):
         return self.project
@@ -62,29 +62,29 @@ class ProjectToc(models.Model):
         verbose_name_plural = verbose_name
 
 
-# 文档模型
+# 手册模型
 class Doc(models.Model):
-    name = models.CharField(verbose_name="文档标题",max_length=50)
+    name = models.CharField(verbose_name="手册标题",max_length=50)
     pre_content = models.TextField(verbose_name="编辑内容",null=True,blank=True)
-    content = models.TextField(verbose_name="文档内容",null=True,blank=True)
-    parent_doc = models.IntegerField(default=0,verbose_name="上级文档")
+    content = models.TextField(verbose_name="手册内容",null=True,blank=True)
+    parent_doc = models.IntegerField(default=0,verbose_name="上级手册")
     top_doc = models.IntegerField(default=0,verbose_name="所属项目")
     sort = models.IntegerField(verbose_name='排序',default=99)
     create_user = models.ForeignKey(User,on_delete=models.CASCADE)
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
-    # 文档状态说明：0表示草稿状态，1表示发布状态，2表示删除状态
-    status = models.IntegerField(choices=((0,0),(1,1)),default=1,verbose_name='文档状态')
+    # 手册状态说明：0表示草稿状态，1表示发布状态，2表示删除状态
+    status = models.IntegerField(choices=((0,0),(1,1)),default=1,verbose_name='手册状态')
     # 编辑器模式：1表示Editormd编辑器，2表示Vditor编辑器，3表示iceEditor编辑器
     editor_mode = models.IntegerField(default=1,verbose_name='编辑器模式')
     open_children = models.BooleanField(default=False,verbose_name="展开下级目录")
-    show_children = models.BooleanField(verbose_name="显示下级文档",default=False)
+    show_children = models.BooleanField(verbose_name="显示下级手册",default=False)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = '文档'
+        verbose_name = '手册'
         verbose_name_plural = verbose_name
         indexes = [
             models.Index(fields=['top_doc','parent_doc','status']),
@@ -101,10 +101,10 @@ class Doc(models.Model):
                        )
 
 
-# 文档历史模型
+# 手册历史模型
 class DocHistory(models.Model):
     doc = models.ForeignKey(Doc,on_delete=models.CASCADE)
-    pre_content = models.TextField(verbose_name='文档历史编辑内容',null=True,blank=True)
+    pre_content = models.TextField(verbose_name='手册历史编辑内容',null=True,blank=True)
     create_user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     create_time = models.DateTimeField(auto_now=True)
 
@@ -112,14 +112,14 @@ class DocHistory(models.Model):
         return self.doc
 
     class Meta:
-        verbose_name = '文档历史'
+        verbose_name = '手册历史'
         verbose_name_plural = verbose_name
 
 
-# 文档模板模型
+# 手册模板模型
 class DocTemp(models.Model):
     name = models.CharField(verbose_name="模板名称",max_length=50)
-    content = models.TextField(verbose_name="文档模板")
+    content = models.TextField(verbose_name="手册模板")
     create_user = models.ForeignKey(User,on_delete=models.CASCADE)
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
@@ -128,16 +128,16 @@ class DocTemp(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = '文档模板'
+        verbose_name = '手册模板'
         verbose_name_plural = verbose_name
 
-# 文档分享模型
+# 手册分享模型
 class DocShare(models.Model):
     token = models.CharField(verbose_name="分享Token",max_length=100,blank=True,null=True)
-    doc = models.ForeignKey(Doc,on_delete=models.CASCADE) # 文档
-    # 文档分享类型，0表示公开分享，1表示私密分享
+    doc = models.ForeignKey(Doc,on_delete=models.CASCADE) # 手册
+    # 手册分享类型，0表示公开分享，1表示私密分享
     share_type = models.IntegerField(choices=((0,0),(1,1)),default=0)
-    # 文档分享码，当分享类型为私密分享时，需要验证分享码
+    # 手册分享码，当分享类型为私密分享时，需要验证分享码
     share_value = models.CharField(max_length=10,verbose_name="分享码",blank=True,null=True)
     # 分享有效期，默认为0，表示永久有效，值为整数，表示创建时间起多久过期
     # effective_time = models.IntegerField(default=0,blank=True,null=True)
@@ -148,7 +148,7 @@ class DocShare(models.Model):
         return self.doc.name
 
     class Meta:
-        verbose_name = '文档分享'
+        verbose_name = '手册分享'
         verbose_name_plural = verbose_name
 
 # 标签模板
@@ -164,7 +164,7 @@ class Tag(models.Model):
         verbose_name_plural = verbose_name
 
 
-# 文档标签
+# 手册标签
 class DocTag(models.Model):
     tag = models.ForeignKey(Tag,on_delete=models.CASCADE)
     doc = models.ForeignKey(Doc,on_delete=models.CASCADE)
@@ -174,7 +174,7 @@ class DocTag(models.Model):
         return "{}-{}".format(self.tag.name,self.doc.name)
 
     class Meta:
-        verbose_name = '文档标签'
+        verbose_name = '手册标签'
         verbose_name_plural = verbose_name
 
 
@@ -255,7 +255,7 @@ class Attachment(models.Model):
 
 # 我的收藏
 class MyCollect(models.Model):
-    # 收藏类型 1表示文档 2表示文集
+    # 收藏类型 1表示手册 2表示文集
     collect_type = models.IntegerField(verbose_name="收藏类型")
     collect_id = models.IntegerField(verbose_name="收藏对象ID")
     create_user = models.ForeignKey(User,on_delete=models.CASCADE)

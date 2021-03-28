@@ -40,7 +40,7 @@
 <div class="doc layui-fluid" style="padding-left:0px;">
     <!-- 左侧目录栏 -->
     <div class="doc-summary">
-        <!-- 文档搜索 -->
+        <!-- 手册搜索 -->
         <form action="{% url 'pro_index' pro_id=project.id %}" method="get">
             <div id="doc-search-input">
                 <input type="text" name="kw" placeholder="{% trans '输入并回车搜索' %}" value="" class="layui-input doc-search-input">
@@ -53,7 +53,7 @@
             {% endif %}
             <a href="{% url 'pro_index' pro_id=project.id %}">{{ project.name }}
                 {% if project.role == 1 %}
-                    <i class="layui-icon layui-icon-password" title="{% trans '私密文档' %}"></i>
+                    <i class="layui-icon layui-icon-password" title="{% trans '私密手册' %}"></i>
                 {% endif %}
             </a>
             {% if request.user.is_authenticated %}
@@ -73,7 +73,7 @@
         </div>
         <hr>
         <!-- 遍历文集大纲 -->
-        <!-- 如果文集的文档数量超过999，使用异步加载文集目录 -->
+        <!-- 如果文集的手册数量超过999，使用异步加载文集目录 -->
         {% if toc_cnt > 999  %}
             <div style="text-align: center;" id='loading-project-toc'><i class="fa fa-spinner fa-pulse"></i>{% trans "文集大纲加载中……" %}</div>
             {% load doc_filter %}
@@ -81,7 +81,7 @@
                 <ul class="summary" id="project-toc"></ul>
             </nav>
         {% else %}
-        <!-- 文档数量小于999，使用同步加载文集目录 -->
+        <!-- 手册数量小于999，使用同步加载文集目录 -->
         <nav>
             <ul class="summary">
             <!-- 一级目录 -->
@@ -153,9 +153,9 @@
     </div>
     <!-- 左侧目录栏结束 -->
 
-    <!-- 右侧文档栏 -->
+    <!-- 右侧手册栏 -->
     <div class="doc-body">
-        <!-- 文档导航 -->
+        <!-- 手册导航 -->
         <div class="doc-header" role="navigation">
             <a class="btn pull-left js-toolbar-action" aria-label="" href="javascript:void(0);" title="{% trans '切换侧边栏' %}">
                 <i class="layui-icon layui-icon-slider"></i>
@@ -176,13 +176,13 @@
                 <i class="layui-icon layui-icon-home"></i> <span class="layui-hide-xs">{% trans "首页" %}</span>
             </a>
         </div>
-        <!-- 文档主体 -->
+        <!-- 手册主体 -->
         <div class="doc-body-content">
             <div class="doc-body-content-div">
                 {% if project.is_watermark %}
                     <div id="wm"></div>
                 {% endif %}
-                <!-- 文档内容 -->
+                <!-- 手册内容 -->
                 <div class="doc-content">
                     <!-- 标题 -->
                     <div class="doc-info">
@@ -231,7 +231,7 @@
             </div>
         </div>
     </div>
-    <!-- 右侧文档栏结束 -->
+    <!-- 右侧手册栏结束 -->
     <!-- 右下角工具按钮 -->
     <div class="fixed-tool-bar">
         <div class="toTop" ><i class="layui-icon layui-icon-up"></i></div>
@@ -307,7 +307,7 @@
 <script src="{% static 'iconFont/iconfont.js' %}"></script>
 <script>
 {% if toc_cnt > 999 %}
-    // 如果文集的文档数量大于999，使用异步加载左侧文集大纲
+    // 如果文集的手册数量大于999，使用异步加载左侧文集大纲
     getProjectToc();
 {% endif %}
 </script>
@@ -364,7 +364,7 @@
                     var toc_cnt = $(".markdown-toc-list").children().length;
                     //console.log(toc_cnt)
                     if(toc_cnt > 0){
-                        //console.log('显示文档目录')
+                        //console.log('显示手册目录')
                         $(".tocMenu").show();
                         initSidebar('.sidebar', '.doc-content');
                     }
@@ -426,7 +426,7 @@
             }
         });
     });
-    // 收藏文档
+    // 收藏手册
     $("#collect_doc").click(function(){
         $(this).toggleClass("layui-icon-star-fill layui-icon-star")
         $(this).toggleClass("collected")

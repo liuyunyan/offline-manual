@@ -12,7 +12,7 @@ from haystack.query import SearchQuerySet
 from app_doc.models import *
 import datetime
 
-# 文档搜索 - 基于Haystack全文搜索
+# 手册搜索 - 基于Haystack全文搜索
 class DocSearchView(SearchView):
     results_per_page = 10
 

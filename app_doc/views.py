@@ -46,7 +46,7 @@ def remove_markdown_tag(docs):
         except Exception as e:
             doc.pre_content = doc.pre_content
 
-# 获取文集的文档目录
+# 获取文集的手册目录
 def get_pro_toc(pro_id):
     # try:
     #     project = Project.objects.get(id=pro_id)
@@ -55,16 +55,16 @@ def get_pro_toc(pro_id):
     #     print("使用缓存")
     # except:
     # print("重新生成")
-    # 查询存在上级文档的文档
+    # 查询存在上级手册的手册
     parent_id_list = Doc.objects.filter(top_doc=pro_id, status=1).exclude(parent_doc=0).values_list('parent_doc',
                                                                                                     flat=True)
-    # 获取存在上级文档的上级文档ID
+    # 获取存在上级手册的上级手册ID
     # print(parent_id_list)
     doc_list = []
     n = 0
-    # 获取一级文档
+    # 获取一级手册
     top_docs = Doc.objects.filter(top_doc=pro_id, parent_doc=0, status=1).values('id', 'name','open_children').order_by('sort')
-    # 遍历一级文档
+    # 遍历一级手册
     for doc in top_docs:
         top_item = {
             'id': doc['id'],
@@ -73,9 +73,9 @@ def get_pro_toc(pro_id):
             # 'spread': True,
             # 'level': 1
         }
-        # 如果一级文档存在下级文档，查询其二级文档
+        # 如果一级手册存在下级手册，查询其二级手册
         if doc['id'] in parent_id_list:
-            # 获取二级文档
+            # 获取二级手册
             sec_docs = Doc.objects.filter(
                 top_doc=pro_id, parent_doc=doc['id'], status=1).values('id', 'name','open_children').order_by('sort')
             top_item['children'] = []
@@ -86,9 +86,9 @@ def get_pro_toc(pro_id):
                     'open_children': doc['open_children']
                     # 'level': 2
                 }
-                # 如果二级文档存在下级文档，查询第三级文档
+                # 如果二级手册存在下级手册，查询第三级手册
                 if doc['id'] in parent_id_list:
-                    # 获取三级文档
+                    # 获取三级手册
                     thr_docs = Doc.objects.filter(
                         top_doc=pro_id, parent_doc=doc['id'], status=1).values('id','name').order_by('sort')
                     sec_item['children'] = []
@@ -107,7 +107,7 @@ def get_pro_toc(pro_id):
                     n += 1
             doc_list.append(top_item)
             n += 1
-        # 如果一级文档没有下级文档，直接保存
+        # 如果一级手册没有下级手册，直接保存
         else:
             doc_list.append(top_item)
             n += 1
@@ -317,12 +317,12 @@ def project_index(request,pro_id):
     try:
         # 获取文集信息
         project = Project.objects.get(id=int(pro_id))
-        # 获取文集最新的5篇文档
+        # 获取文集最新的5篇手册
         new_docs = Doc.objects.filter(top_doc=pro_id,status=1).order_by('-modify_time')[:5]
         # markdown文本生成摘要（不带markdown标记）
         remove_markdown_tag(new_docs)
 
-        # 获取文集的文档目录
+        # 获取文集的手册目录
         toc_list,toc_cnt = get_pro_toc(pro_id)
         # toc_list,toc_cnt = ([],1000)
 
@@ -337,7 +337,7 @@ def project_index(request,pro_id):
             is_collect_pro = False
 
         # 获取文集的协作用户信息
-        if request.user.is_authenticated: # 对登陆用户查询其协作文档信息
+        if request.user.is_authenticated: # 对登陆用户查询其协作手册信息
             colla_user = ProjectCollaborator.objects.filter(project=project,user=request.user).count()
         else:
             colla_user = 0
@@ -373,7 +373,7 @@ def project_index(request,pro_id):
 
         # 获取搜索词
         kw = request.GET.get('kw','')
-        # 获取文集下所有一级文档
+        # 获取文集下所有一级手册
         # project_docs = Doc.objects.filter(
         #     top_doc=int(pro_id),
         #     parent_doc=0,
@@ -511,7 +511,7 @@ def del_project(request):
             if range == 'single':
                 pro = Project.objects.get(id=pro_id)
                 if (request.user == pro.create_user) or (request.user.is_superuser):
-                    # 删除文集下的文档、文档历史、文档分享、文档标签
+                    # 删除文集下的手册、手册历史、手册分享、手册标签
                     pro_doc_list = Doc.objects.filter(top_doc=int(pro_id))
                     for doc in pro_doc_list:
                         DocHistory.objects.filter(doc=doc).delete()
@@ -527,7 +527,7 @@ def del_project(request):
                 pros = pro_id.split(",")
                 try:
                     projects = Project.objects.filter(id__in=pros, create_user=request.user)
-                    # 删除文集下的文档、文档历史、文档分享、文档标签
+                    # 删除文集下的手册、手册历史、手册分享、手册标签
                     pro_doc_list = Doc.objects.filter(top_doc__in=[i.id for i in projects])
                     for doc in pro_doc_list:
                         DocHistory.objects.filter(doc=doc).delete()
@@ -596,7 +596,7 @@ def manage_project(request):
         return JsonResponse(resp_data)
 
 
-# 管理文集 - 文集文档排序
+# 管理文集 - 文集手册排序
 @login_required()
 @require_http_methods(['GET','POST'])
 def manage_project_doc_sort(request,pro_id):
@@ -611,14 +611,14 @@ def manage_project_doc_sort(request,pro_id):
         pro_colla = ProjectCollaborator.objects.filter(project=pro,user=request.user,role=1)
         # 文集的创建者和文集高级权限协作者允许操作
         if (pro.create_user == request.user) or pro_colla.count() > 0:
-            # 查询存在上级文档的文档
+            # 查询存在上级手册的手册
             parent_id_list = Doc.objects.filter(top_doc=pro_id, status=1).exclude(parent_doc=0).values_list(
                 'parent_doc', flat=True)
-            # 获取存在上级文档的上级文档ID
+            # 获取存在上级手册的上级手册ID
             doc_list = []
-            # 获取一级文档
+            # 获取一级手册
             top_docs = Doc.objects.filter(top_doc=pro_id, parent_doc=0, status=1).values('id', 'name').order_by('sort')
-            # 遍历一级文档
+            # 遍历一级手册
             for doc in top_docs:
                 top_item = {
                     'id': doc['id'],
@@ -627,9 +627,9 @@ def manage_project_doc_sort(request,pro_id):
                     'spread': True,
                     'level': 1
                 }
-                # 如果一级文档存在下级文档，查询其二级文档
+                # 如果一级手册存在下级手册，查询其二级手册
                 if doc['id'] in parent_id_list:
-                    # 获取二级文档
+                    # 获取二级手册
                     sec_docs = Doc.objects.filter(top_doc=pro_id, parent_doc=doc['id'], status=1).values('id',
                                                                                                          'name').order_by(
                         'sort')
@@ -641,9 +641,9 @@ def manage_project_doc_sort(request,pro_id):
                             'title': doc['name'],
                             'level': 2
                         }
-                        # 如果二级文档存在下级文档，查询第三级文档
+                        # 如果二级手册存在下级手册，查询第三级手册
                         if doc['id'] in parent_id_list:
-                            # 获取三级文档
+                            # 获取三级手册
                             thr_docs = Doc.objects.filter(top_doc=pro_id, parent_doc=doc['id'], status=1).values('id',
                                                                                                                  'name').order_by(
                                 'sort')
@@ -660,7 +660,7 @@ def manage_project_doc_sort(request,pro_id):
                         else:
                             top_item['children'].append(sec_item)
                     doc_list.append(top_item)
-                # 如果一级文档没有下级文档，直接保存
+                # 如果一级手册没有下级手册，直接保存
                 else:
                     doc_list.append(top_item)
             return render(request,'app_doc/manage/manage_project_doc_sort.html',locals())
@@ -669,11 +669,11 @@ def manage_project_doc_sort(request,pro_id):
 
     else:
         project_id = request.POST.get('pid', None)  # 文集ID
-        sort_data = request.POST.get('sort_data', '[]')  # 文档排序列表
+        sort_data = request.POST.get('sort_data', '[]')  # 手册排序列表
         try:
             sort_data = json.loads(sort_data)
         except Exception:
-            return JsonResponse({'status': False, 'data': '文档参数错误'})
+            return JsonResponse({'status': False, 'data': '手册参数错误'})
 
         try:
             pro = Project.objects.get(id=project_id)
@@ -684,20 +684,20 @@ def manage_project_doc_sort(request,pro_id):
         pro_colla = ProjectCollaborator.objects.filter(project=pro, user=request.user, role=1)
         # 文集的创建者和文集高级权限协作者允许操作
         if (pro.create_user == request.user) or pro_colla.count() > 0:
-            # 文档排序
+            # 手册排序
             n = 10
-            # 第一级文档
+            # 第一级手册
             for data in sort_data:
                 # print(data)
                 Doc.objects.filter(id=data['id']).update(sort=n,parent_doc=0)
                 n += 10
-                # 存在第二级文档
+                # 存在第二级手册
                 if 'children' in data.keys():
                     n1 = 10
                     for c1 in data['children']:
                         Doc.objects.filter(id=c1['id']).update(sort=n1, parent_doc=data['id'])
                         n1 += 10
-                        # 存在第三级文档
+                        # 存在第三级手册
                         if 'children' in c1.keys():
                             n2 = 10
                             for c2 in c1['children']:
@@ -764,7 +764,7 @@ def manage_project_collaborator(request,pro_id):
         pro = project[0]
         collaborator = ProjectCollaborator.objects.filter(project=pro) # 获取文集的协作者
         colla_user_list = [i.user for i in collaborator] # 文集协作用户的ID
-        colla_docs = Doc.objects.filter(top_doc=pro.id,create_user__in=colla_user_list) # 获取文集协作用户创建的文档
+        colla_docs = Doc.objects.filter(top_doc=pro.id,create_user__in=colla_user_list) # 获取文集协作用户创建的手册
         return render(request, 'app_doc/manage/manage_project_collaborator.html', locals())
 
     elif request.method == 'POST':
@@ -851,7 +851,7 @@ def manage_project_transfer(request,pro_id):
                 # 修改文集的创建者
                 pro.create_user = transfer_user
                 pro.save()
-                # 修改文集文档的创建者
+                # 修改文集手册的创建者
                 Doc.objects.filter(create_user=init_user,top_doc=pro_id).update(
                     create_user=transfer_user
                 )
@@ -861,14 +861,14 @@ def manage_project_transfer(request,pro_id):
                 return JsonResponse({'status':False,'data':'用户不存在'})
 
 
-# 文档浏览页
+# 手册浏览页
 @require_http_methods(['GET'])
 def doc(request,pro_id,doc_id):
     try:
         if pro_id != '' and doc_id != '':
             # 获取文集信息
             project = Project.objects.get(id=int(pro_id))
-            # 获取文集的文档目录
+            # 获取文集的手册目录
             toc_list,toc_cnt = get_pro_toc(pro_id)
             # 获取文集的协作用户信息
             if request.user.is_authenticated:
@@ -885,7 +885,7 @@ def doc(request,pro_id,doc_id):
             if request.user.is_authenticated:
                 is_collect_pro = MyCollect.objects.filter(collect_type=2, collect_id=pro_id,
                                                           create_user=request.user).exists()
-                # 获取文档收藏状态
+                # 获取手册收藏状态
                 is_collect_doc = MyCollect.objects.filter(collect_type=1, collect_id=doc_id,
                                                           create_user=request.user).exists()
             else:
@@ -915,19 +915,19 @@ def doc(request,pro_id,doc_id):
                     if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
                         return redirect('/check_viewcode/?to={}'.format(request.path))
 
-            # 获取文档内容
+            # 获取手册内容
             try:
-                doc = Doc.objects.get(id=int(doc_id),status=1) # 文档信息
-                doc_tags = DocTag.objects.filter(doc=doc) # 文档标签信息
+                doc = Doc.objects.get(id=int(doc_id),status=1) # 手册信息
+                doc_tags = DocTag.objects.filter(doc=doc) # 手册标签信息
             except ObjectDoesNotExist:
                 return render(request, '404.html')
-            # 获取文档分享信息
+            # 获取手册分享信息
             try:
                 doc_share = DocShare.objects.get(doc=doc)
                 is_share = True
             except ObjectDoesNotExist:
                 is_share = False
-            # 获取文集下一级文档
+            # 获取文集下一级手册
             # project_docs = Doc.objects.filter(top_doc=doc.top_doc, parent_doc=0, status=1).order_by('sort')
             return render(request,'app_doc/doc.html',locals())
         else:
@@ -937,7 +937,7 @@ def doc(request,pro_id,doc_id):
         return render(request,'404.html')
 
 
-# 创建文档
+# 创建手册
 @login_required()
 @require_http_methods(['GET',"POST"])
 @logger.catch()
@@ -955,26 +955,26 @@ def create_doc(request):
             editor_mode = int(eid)
 
         try:
-            editor_type = "新建文档"
+            editor_type = "新建手册"
             pid = request.GET.get('pid',-999)
             project_list = Project.objects.filter(create_user=request.user) # 自己创建的文集列表
             colla_project_list = ProjectCollaborator.objects.filter(user=request.user) # 协作的文集列表
             doctemp_list = DocTemp.objects.filter(create_user=request.user).values('id','name','create_time')
             return render(request, 'app_doc/editor/create_doc.html', locals())
         except Exception as e:
-            logger.exception("访问创建文档页面出错")
+            logger.exception("访问创建手册页面出错")
             return render(request,'404.html')
     elif request.method == 'POST':
         try:
             project = request.POST.get('project','') # 文集ID
-            parent_doc = request.POST.get('parent_doc','') # 上级文档ID
-            doc_name = request.POST.get('doc_name','') # 文档标题
-            doc_tags = request.POST.get('doc_tag','') # 文档标签
-            doc_content = request.POST.get('content','') # 文档内容
-            pre_content = request.POST.get('pre_content','') # 文档Markdown内容
-            sort = request.POST.get('sort','') # 文档排序
-            editor_mode = request.POST.get('editor_mode',editor_mode)    #获取文档编辑器
-            status = request.POST.get('status',1) # 文档状态
+            parent_doc = request.POST.get('parent_doc','') # 上级手册ID
+            doc_name = request.POST.get('doc_name','') # 手册标题
+            doc_tags = request.POST.get('doc_tag','') # 手册标签
+            doc_content = request.POST.get('content','') # 手册内容
+            pre_content = request.POST.get('pre_content','') # 手册Markdown内容
+            sort = request.POST.get('sort','') # 手册排序
+            editor_mode = request.POST.get('editor_mode',editor_mode)    #获取手册编辑器
+            status = request.POST.get('status',1) # 手册状态
             open_children = request.POST.get('open_children', False)  # 展示下级目录
             show_children = request.POST.get('show_children', False)  # 展示下级目录
             if open_children == 'on':
@@ -994,7 +994,7 @@ def create_doc(request):
                     with transaction.atomic():
                         save_id = transaction.savepoint()
                         try:
-                            # 创建文档
+                            # 创建手册
                             doc = Doc.objects.create(
                                 name=doc_name,
                                 content = doc_content,
@@ -1008,7 +1008,7 @@ def create_doc(request):
                                 open_children = open_children,
                                 show_children = show_children
                             )
-                            # 设置文档标签
+                            # 设置手册标签
                             for t in doc_tags.split(","):
                                 if t != '':
                                     tag = Tag.objects.get_or_create(name=t,create_user=request.user)
@@ -1016,7 +1016,7 @@ def create_doc(request):
 
                             return JsonResponse({'status': True, 'data': {'pro': project, 'doc': doc.id}})
                         except Exception as e:
-                            logger.exception("创建文档异常")
+                            logger.exception("创建手册异常")
                             # 回滚事务
                             transaction.savepoint_rollback(save_id)
                         transaction.savepoint_commit(save_id)
@@ -1024,28 +1024,28 @@ def create_doc(request):
                 else:
                     return JsonResponse({'status':False,'data':'无权操作此文集'})
             else:
-                return JsonResponse({'status':False,'data':'请确认文档标题、文集正确'})
+                return JsonResponse({'status':False,'data':'请确认手册标题、文集正确'})
         except Exception as e:
-            logger.exception("创建文档出错")
+            logger.exception("创建手册出错")
             return JsonResponse({'status':False,'data':'请求出错'})
     else:
         return JsonResponse({'status':False,'data':'方法不允许'})
 
 
-# 修改文档
+# 修改手册
 @login_required()
 @require_http_methods(['GET',"POST"])
 def modify_doc(request,doc_id):
-    editor_type = "修改文档"
+    editor_type = "修改手册"
     if request.method == 'GET':
         try:
-            doc = Doc.objects.get(id=doc_id) # 查询文档信息
-            editor_mode = doc.editor_mode # 设置文档编辑器为文档上一次使用的编辑模式
+            doc = Doc.objects.get(id=doc_id) # 查询手册信息
+            editor_mode = doc.editor_mode # 设置手册编辑器为手册上一次使用的编辑模式
             eid = request.GET.get('eid',editor_mode)
             if eid in [1,2,3,'1','2','3']:
                 editor_mode = int(eid)
-            doc_tags = ','.join([i.tag.name for i in DocTag.objects.filter(doc=doc)]) # 查询文档标签信息
-            project = Project.objects.get(id=doc.top_doc) # 查询文档所属的文集信息
+            doc_tags = ','.join([i.tag.name for i in DocTag.objects.filter(doc=doc)]) # 查询手册标签信息
+            project = Project.objects.get(id=doc.top_doc) # 查询手册所属的文集信息
             pro_colla = ProjectCollaborator.objects.filter(project=project,user=request.user) # 查询用户的协作文集信息
             if pro_colla.count() == 0:
                 is_pro_colla = False
@@ -1067,20 +1067,20 @@ def modify_doc(request,doc_id):
             else:
                 return render(request,'403.html')
         except Exception as e:
-            logger.exception("修改文档页面访问出错")
+            logger.exception("修改手册页面访问出错")
             return render(request,'404.html')
     elif request.method == 'POST':
         try:
-            doc_id = request.POST.get('doc_id','') # 文档ID
+            doc_id = request.POST.get('doc_id','') # 手册ID
             project_id = request.POST.get('project', '') # 文集ID
-            parent_doc = request.POST.get('parent_doc', '') # 上级文档ID
-            doc_name = request.POST.get('doc_name', '') # 文档名称
-            doc_tags = request.POST.get('doc_tag','') # 文档标签
-            doc_content = request.POST.get('content', '') # 文档内容
-            pre_content = request.POST.get('pre_content', '') # 文档Markdown格式内容
-            sort = request.POST.get('sort', '') # 文档排序
-            editor_mode = request.POST.get('editor_mode',1)    #获取文档编辑器
-            status = request.POST.get('status',1) # 文档状态
+            parent_doc = request.POST.get('parent_doc', '') # 上级手册ID
+            doc_name = request.POST.get('doc_name', '') # 手册名称
+            doc_tags = request.POST.get('doc_tag','') # 手册标签
+            doc_content = request.POST.get('content', '') # 手册内容
+            pre_content = request.POST.get('pre_content', '') # 手册Markdown格式内容
+            sort = request.POST.get('sort', '') # 手册排序
+            editor_mode = request.POST.get('editor_mode',1)    #获取手册编辑器
+            status = request.POST.get('status',1) # 手册状态
             open_children = request.POST.get('open_children',False) # 展示下级目录
             show_children = request.POST.get('show_children', False)  # 展示下级目录
             if open_children == 'on':
@@ -1102,19 +1102,19 @@ def modify_doc(request,doc_id):
                     is_pro_colla = True
                 else:
                     is_pro_colla = False
-                # 验证用户有权限修改文档 - 文档的创建者或文集的高级协作者
+                # 验证用户有权限修改手册 - 手册的创建者或文集的高级协作者
                 if (request.user == doc.create_user) or (is_pro_colla is True) or (request.user == project.create_user):
                     # 开启事务
                     with transaction.atomic():
                         save_id = transaction.savepoint()
                         try:
-                            # 将现有文档内容写入到文档历史中
+                            # 将现有手册内容写入到手册历史中
                             DocHistory.objects.create(
                                 doc = doc,
                                 pre_content = doc.pre_content,
                                 create_user = request.user
                             )
-                            # 更新文档内容
+                            # 更新手册内容
                             Doc.objects.filter(id=int(doc_id)).update(
                                 name=doc_name,
                                 content=doc_content,
@@ -1127,20 +1127,20 @@ def modify_doc(request,doc_id):
                                 open_children = open_children,
                                 show_children = show_children
                             )
-                            # 更新文档标签
+                            # 更新手册标签
                             doc_tag_list = doc_tags.split(",") if doc_tags != "" else []
                             # print(doc_tags,doc_tag_list)
-                            # 如果没有设置标签，则删除此文档的所有标签
+                            # 如果没有设置标签，则删除此手册的所有标签
                             if len(doc_tag_list) == 0:
                                 DocTag.objects.filter(doc=doc).delete()
                             else:
-                                current_doc_tags = [i.tag.name for i in DocTag.objects.filter(doc=doc)] # 获取当前文档的标签
-                                # 遍历当前文档标签，如果不在新的标签列表，则删除
+                                current_doc_tags = [i.tag.name for i in DocTag.objects.filter(doc=doc)] # 获取当前手册的标签
+                                # 遍历当前手册标签，如果不在新的标签列表，则删除
                                 for tag in current_doc_tags:
                                     if tag not in doc_tag_list:
                                         tag = Tag.objects.get(name=tag,create_user=request.user)
                                         DocTag.objects.filter(doc=doc,tag=tag).delete()
-                                # 遍历新的标签列表，如果不在当前文档标签中，则创建
+                                # 遍历新的标签列表，如果不在当前手册标签中，则创建
                                 for t in doc_tag_list:
                                     if t not in current_doc_tags and current_doc_tags != '':
                                         tag = Tag.objects.get_or_create(name=t, create_user=request.user)
@@ -1148,7 +1148,7 @@ def modify_doc(request,doc_id):
 
                             return JsonResponse({'status': True, 'data': '修改成功'})
                         except:
-                            logger.exception("修改文档异常")
+                            logger.exception("修改手册异常")
                             # 回滚事务
                             transaction.savepoint_rollback(save_id)
                         transaction.savepoint_commit(save_id)
@@ -1159,37 +1159,37 @@ def modify_doc(request,doc_id):
             else:
                 return JsonResponse({'status': False,'data':'参数错误'})
         except Exception as e:
-            logger.exception("修改文档出错")
+            logger.exception("修改手册出错")
             return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 删除文档 - 软删除 - 进入回收站
+# 删除手册 - 软删除 - 进入回收站
 @login_required()
 @require_http_methods(["POST"])
 def del_doc(request):
     try:
-        # 获取文档ID
+        # 获取手册ID
         doc_id = request.POST.get('doc_id',None)
         range = request.POST.get('range', 'single')
         if doc_id:
             if range == 'single':
-                # 查询文档
+                # 查询手册
                 try:
                     doc = Doc.objects.get(id=doc_id)
                     try:
-                        project = Project.objects.get(id=doc.top_doc) # 查询文档所属的文集
+                        project = Project.objects.get(id=doc.top_doc) # 查询手册所属的文集
                     except ObjectDoesNotExist:
-                        logger.error("文档{}的所属文集不存在。".format(doc_id))
+                        logger.error("手册{}的所属文集不存在。".format(doc_id))
                         project = 0
-                    # 获取文档所属文集的协作信息
+                    # 获取手册所属文集的协作信息
                     pro_colla = ProjectCollaborator.objects.filter(project=project,user=request.user)
                     if pro_colla.exists():
                         colla_user_role = pro_colla[0].role
                     else:
                         colla_user_role = 0
                 except ObjectDoesNotExist:
-                    return JsonResponse({'status': False, 'data': '文档不存在'})
-                # 如果请求用户为站点管理员、文档创建者、高级权限的协作者、文集的创建者，可以删除
+                    return JsonResponse({'status': False, 'data': '手册不存在'})
+                # 如果请求用户为站点管理员、手册创建者、高级权限的协作者、文集的创建者，可以删除
                 if (request.user == doc.create_user) \
                         or (colla_user_role == 1) \
                         or (request.user == project.create_user)\
@@ -1198,11 +1198,11 @@ def del_doc(request):
                     doc.status = 3
                     doc.modify_time = datetime.datetime.now()
                     doc.save()
-                    # 修改其下级所有文档状态为删除
-                    chr_doc = Doc.objects.filter(parent_doc=doc_id) # 获取下级文档
-                    chr_doc_ids = chr_doc.values_list('id',flat=True) # 提取下级文档的ID
-                    chr_doc.update(status=3,modify_time=datetime.datetime.now()) # 修改下级文档的状态为删除
-                    Doc.objects.filter(parent_doc__in=chr_doc_ids).update(status=3,modify_time=datetime.datetime.now()) # 修改下级文档的下级文档状态
+                    # 修改其下级所有手册状态为删除
+                    chr_doc = Doc.objects.filter(parent_doc=doc_id) # 获取下级手册
+                    chr_doc_ids = chr_doc.values_list('id',flat=True) # 提取下级手册的ID
+                    chr_doc.update(status=3,modify_time=datetime.datetime.now()) # 修改下级手册的状态为删除
+                    Doc.objects.filter(parent_doc__in=chr_doc_ids).update(status=3,modify_time=datetime.datetime.now()) # 修改下级手册的下级手册状态
 
                     return JsonResponse({'status': True, 'data': '删除完成'})
                 else:
@@ -1221,11 +1221,11 @@ def del_doc(request):
         else:
             return JsonResponse({'status':False,'data':'参数错误'})
     except Exception as e:
-        logger.exception("删除文档出错")
+        logger.exception("删除手册出错")
         return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 管理文档
+# 管理手册
 @login_required()
 @require_http_methods(['GET','POST'])
 def manage_doc(request):
@@ -1233,19 +1233,19 @@ def manage_doc(request):
         # 文集列表
         project_list = Project.objects.filter(create_user=request.user)  # 自己创建的文集列表
         colla_project_list = ProjectCollaborator.objects.filter(user=request.user)  # 协作的文集列表
-        # 文档数量
-        # 已发布文档数量
+        # 手册数量
+        # 已发布手册数量
         published_doc_cnt = Doc.objects.filter(create_user=request.user, status=1).count()
-        # 草稿文档数量
+        # 草稿手册数量
         draft_doc_cnt = Doc.objects.filter(create_user=request.user, status=0).count()
-        # 所有文档数量
+        # 所有手册数量
         all_cnt = published_doc_cnt + draft_doc_cnt
         return render(request,'app_doc/manage/manage_doc.html',locals())
     else:
         kw = request.POST.get('kw', '')
         project = request.POST.get('project','')
         status = request.POST.get('status','')
-        if status == '-1': # 全部文档
+        if status == '-1': # 全部手册
             q_status = [0,1]
         elif status in ['0','1']:
             q_status = [int(status)]
@@ -1279,12 +1279,12 @@ def manage_doc(request):
         project_list = Project.objects.filter(create_user=request.user)  # 自己创建的文集列表
         colla_project_list = ProjectCollaborator.objects.filter(user=request.user)  # 协作的文集列表
 
-        # 文档数量
-        # 已发布文档数量
+        # 手册数量
+        # 已发布手册数量
         published_doc_cnt = Doc.objects.filter(create_user=request.user, status=1).count()
-        # 草稿文档数量
+        # 草稿手册数量
         draft_doc_cnt = Doc.objects.filter(create_user=request.user, status=0).count()
-        # 所有文档数量
+        # 所有手册数量
         all_cnt = published_doc_cnt + draft_doc_cnt
 
         # 分页处理
@@ -1321,13 +1321,13 @@ def manage_doc(request):
         return JsonResponse(resp_data)
 
 
-# 移动文档
+# 移动手册
 @login_required()
 @require_http_methods(['POST'])
 def move_doc(request):
-    doc_id = request.POST.get('doc_id','') # 文档ID
+    doc_id = request.POST.get('doc_id','') # 手册ID
     pro_id = request.POST.get('pro_id','') # 移动的文集ID
-    move_type = request.POST.get('move_type','') # 移动的类型 0复制 1移动 2连同下级文档移动
+    move_type = request.POST.get('move_type','') # 移动的类型 0复制 1移动 2连同下级手册移动
     parent_id = request.POST.get('parent_id',0)
     # 判断文集是否存在且有权限
     try:
@@ -1337,18 +1337,18 @@ def move_doc(request):
             return JsonResponse({'status':False,'data':'文集无权限'})
     except ObjectDoesNotExist:
         return JsonResponse({'status':False,'data':'文集不存在'})
-    # 判断文档是否存在
+    # 判断手册是否存在
     try:
         doc = Doc.objects.get(id=int(doc_id),create_user=request.user)
     except ObjectDoesNotExist:
-        return JsonResponse({'status':False,'data':'文档不存在'})
-    # 判断上级文档是否存在
+        return JsonResponse({'status':False,'data':'手册不存在'})
+    # 判断上级手册是否存在
     try:
         if parent_id != '0':
             parent = Doc.objects.get(id=int(parent_id),create_user=request.user)
     except ObjectDoesNotExist:
-        return JsonResponse({'status':False,'data':'上级文档不存在'})
-    # 复制文档
+        return JsonResponse({'status':False,'data':'上级手册不存在'})
+    # 复制手册
     if move_type == '0':
         copy_doc = Doc.objects.create(
             name = doc.name,
@@ -1359,48 +1359,48 @@ def move_doc(request):
             create_user = request.user,
             create_time = datetime.datetime.now(),
             modify_time = datetime.datetime.now(),
-            # 文档状态说明：0表示草稿状态，1表示发布状态
+            # 手册状态说明：0表示草稿状态，1表示发布状态
             status = doc.status
         )
         return JsonResponse({'status':True,'data':{'pro_id':pro_id,'doc_id':copy_doc.id}})
-    # 移动文档，下级文档更改到根目录
+    # 移动手册，下级手册更改到根目录
     elif move_type == '1':
         try:
-            # 修改文档的所属文集和上级文档实现移动文档
+            # 修改手册的所属文集和上级手册实现移动手册
             Doc.objects.filter(id=int(doc_id)).update(parent_doc=int(parent_id),top_doc=int(pro_id))
-            # 修改其子文档为顶级文档
+            # 修改其子手册为顶级手册
             Doc.objects.filter(parent_doc=doc_id).update(parent_doc=0)
             return JsonResponse({'status':True,'data':{'pro_id':pro_id,'doc_id':doc_id}})
         except:
-            logger.exception("移动文档异常")
-            return JsonResponse({'status':False,'data':'移动文档失败'})
-    # 包含下级文档一起移动
+            logger.exception("移动手册异常")
+            return JsonResponse({'status':False,'data':'移动手册失败'})
+    # 包含下级手册一起移动
     elif move_type == '2':
         try:
-            # 修改文档的所属文集和上级文档实现移动文档
+            # 修改手册的所属文集和上级手册实现移动手册
             Doc.objects.filter(id=int(doc_id)).update(parent_doc=int(parent_id), top_doc=int(pro_id))
-            # 修改其子文档的文集归属
+            # 修改其子手册的文集归属
             child_doc = Doc.objects.filter(parent_doc=doc_id)
             child_doc.update(top_doc=int(pro_id))
-            # 遍历子文档，如果其存在下级文档，那么继续修改所属文集
+            # 遍历子手册，如果其存在下级手册，那么继续修改所属文集
             for child in child_doc:
                 Doc.objects.filter(parent_doc=child.id).update(top_doc=int(pro_id))
             return JsonResponse({'status': True, 'data':{'pro_id':pro_id,'doc_id':doc_id}})
         except:
-            logger.exception("移动包含下级的文档异常")
-            return JsonResponse({'status': False, 'data': '移动文档失败'})
+            logger.exception("移动包含下级的手册异常")
+            return JsonResponse({'status': False, 'data': '移动手册失败'})
     else:
         return JsonResponse({'status':False,'data':'移动类型错误'})
 
 
-# 查看对比文档历史版本
+# 查看对比手册历史版本
 @login_required()
 @require_http_methods(['GET',"POST"])
 def diff_doc(request,doc_id,his_id):
     if request.method == 'GET':
         try:
-            doc = Doc.objects.get(id=doc_id)  # 查询文档信息
-            project = Project.objects.get(id=doc.top_doc)  # 查询文档所属的文集信息
+            doc = Doc.objects.get(id=doc_id)  # 查询手册信息
+            project = Project.objects.get(id=doc.top_doc)  # 查询手册所属的文集信息
             pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)  # 查询用户的协作文集信息
             if (request.user == doc.create_user) or (pro_colla[0].role == 1):
                 history = DocHistory.objects.get(id=his_id)
@@ -1412,13 +1412,13 @@ def diff_doc(request,doc_id,his_id):
             else:
                 return render(request, '403.html')
         except Exception as e:
-            logger.exception("文档历史版本页面访问出错")
+            logger.exception("手册历史版本页面访问出错")
             return render(request, '404.html')
 
     elif request.method == 'POST':
         try:
-            doc = Doc.objects.get(id=doc_id)  # 查询文档信息
-            project = Project.objects.get(id=doc.top_doc)  # 查询文档所属的文集信息
+            doc = Doc.objects.get(id=doc_id)  # 查询手册信息
+            project = Project.objects.get(id=doc.top_doc)  # 查询手册所属的文集信息
             pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)  # 查询用户的协作文集信息
             if (request.user == doc.create_user) or (pro_colla[0].role == 1):
                 history = DocHistory.objects.get(id=his_id)
@@ -1429,11 +1429,11 @@ def diff_doc(request,doc_id,his_id):
             else:
                 return JsonResponse({'status':False,'data':'非法请求'})
         except Exception as e:
-            logger.exception("文档历史版本获取出错")
+            logger.exception("手册历史版本获取出错")
             return JsonResponse({'status':False,'data':'获取异常'})
 
 
-# 管理文档历史版本
+# 管理手册历史版本
 @login_required()
 @require_http_methods(['GET',"POST"])
 def manage_doc_history(request,doc_id):
@@ -1451,7 +1451,7 @@ def manage_doc_history(request,doc_id):
                 historys = paginator.page(paginator.num_pages)
             return render(request, 'app_doc/manage/manage_doc_history.html', locals())
         except Exception as e:
-            logger.exception("管理文档历史版本页面访问出错")
+            logger.exception("管理手册历史版本页面访问出错")
             return render(request, '404.html')
     elif request.method == 'POST':
         try:
@@ -1459,16 +1459,16 @@ def manage_doc_history(request,doc_id):
             DocHistory.objects.filter(id=history_id,doc=doc_id,create_user=request.user).delete()
             return JsonResponse({'status':True,'data':'删除成功'})
         except:
-            logger.exception("操作文档历史版本出错")
+            logger.exception("操作手册历史版本出错")
             return JsonResponse({'status':False,'data':'出现异常'})
 
 
-# 文档回收站
+# 手册回收站
 @login_required()
 @require_http_methods(['GET','POST'])
 def doc_recycle(request):
     if request.method == 'GET':
-        # 获取状态为删除的文档
+        # 获取状态为删除的手册
         doc_list = Doc.objects.filter(status=3,create_user=request.user).order_by('-modify_time')
         # 分页处理
         paginator = Paginator(doc_list, 15)
@@ -1483,36 +1483,36 @@ def doc_recycle(request):
     elif request.method == 'POST':
         try:
             # 获取参数
-            doc_id = request.POST.get('doc_id', None) # 文档ID
+            doc_id = request.POST.get('doc_id', None) # 手册ID
             types = request.POST.get('type',None) # 操作类型
             if doc_id:
-                # 查询文档
+                # 查询手册
                 try:
                     doc = Doc.objects.get(id=doc_id)
-                    project = Project.objects.get(id=doc.top_doc)  # 查询文档所属的文集
-                    # 获取文档所属文集的协作信息
+                    project = Project.objects.get(id=doc.top_doc)  # 查询手册所属的文集
+                    # 获取手册所属文集的协作信息
                     pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)  #
                     if pro_colla.exists():
                         colla_user_role = pro_colla[0].role
                     else:
                         colla_user_role = 0
                 except ObjectDoesNotExist:
-                    return JsonResponse({'status': False, 'data': '文档不存在'})
-                # 如果请求用户为文档创建者、高级权限的协作者、文集的创建者，可以操作
+                    return JsonResponse({'status': False, 'data': '手册不存在'})
+                # 如果请求用户为手册创建者、高级权限的协作者、文集的创建者，可以操作
                 if (request.user == doc.create_user) or (colla_user_role == 1) or (request.user == project.create_user):
-                    # 还原文档
+                    # 还原手册
                     if types == 'restore':
                         # 修改状态为草稿
                         doc.status = 0
                         doc.modify_time = datetime.datetime.now()
                         doc.save()
-                    # 删除文档
+                    # 删除手册
                     elif types == 'del':
-                        # 删除文档历史、分享、标签
+                        # 删除手册历史、分享、标签
                         DocHistory.objects.filter(doc=doc).delete()
                         DocShare.objects.filter(doc=doc).delete()
                         DocTag.objects.filter(doc=doc).delete()
-                        # 删除文档
+                        # 删除手册
                         doc.delete()
                     else:
                         return JsonResponse({'status':False,'data':'无效请求'})
@@ -1523,7 +1523,7 @@ def doc_recycle(request):
             elif types == 'empty':
                 docs = Doc.objects.filter(status=3,create_user=request.user)
                 for doc in docs:
-                    # 删除文档历史、分享、标签
+                    # 删除手册历史、分享、标签
                     DocHistory.objects.filter(doc=doc).delete()
                     DocShare.objects.filter(doc=doc).delete()
                     DocTag.objects.filter(doc=doc).delete()
@@ -1536,29 +1536,29 @@ def doc_recycle(request):
             else:
                 return JsonResponse({'status': False, 'data': '参数错误'})
         except Exception as e:
-            logger.exception("处理文档出错")
+            logger.exception("处理手册出错")
             return JsonResponse({'status': False, 'data': '请求出错'})
 
 
-# 一键发布文档
+# 一键发布手册
 @login_required()
 @require_http_methods(['POST'])
 def fast_publish_doc(request):
     doc_id = request.POST.get('doc_id',None)
-    # 查询文档
+    # 查询手册
     try:
         doc = Doc.objects.get(id=doc_id)
-        project = Project.objects.get(id=doc.top_doc)  # 查询文档所属的文集
-        # 获取文档所属文集的协作信息
+        project = Project.objects.get(id=doc.top_doc)  # 查询手册所属的文集
+        # 获取手册所属文集的协作信息
         pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)  #
         if pro_colla.exists():
             colla_user_role = pro_colla[0].role
         else:
             colla_user_role = 0
     except ObjectDoesNotExist:
-        return JsonResponse({'status': False, 'data': '文档不存在'})
-    # 判断请求者是否有权限（文档创建者、文集创建者、文集高级协作者）
-    # 如果请求用户为文档创建者、高级权限的协作者、文集的创建者，可以删除
+        return JsonResponse({'status': False, 'data': '手册不存在'})
+    # 判断请求者是否有权限（手册创建者、文集创建者、文集高级协作者）
+    # 如果请求用户为手册创建者、高级权限的协作者、文集的创建者，可以删除
     if (request.user == doc.create_user) or (colla_user_role == 1) or (request.user == project.create_user):
         try:
             doc.status = 1
@@ -1566,13 +1566,13 @@ def fast_publish_doc(request):
             doc.save()
             return JsonResponse({'status':True,'data':'发布成功'})
         except:
-            logger.exception("文档一键发布失败")
+            logger.exception("手册一键发布失败")
             return JsonResponse({'status':False,'data':'发布失败'})
     else:
         return JsonResponse({'status':False,'data':'非法请求'})
 
 
-# 私密文档分享
+# 私密手册分享
 @require_http_methods(['GET','POST'])
 def share_doc(request):
     if request.method == 'GET':
@@ -1587,7 +1587,7 @@ def share_doc(request):
             # 私密分享
             else:
                 doc_id_base64 = base64.standard_b64encode(str(share_doc.doc.id).encode())
-                # 不存在公开分享的文档，则判断验证分享码
+                # 不存在公开分享的手册，则判断验证分享码
                 share_cookie_name = 'sharedoc-{}'.format(share_token)
                 share_value = request.COOKIES.get(share_cookie_name) if share_cookie_name in request.COOKIES.keys() else 0
                 if share_doc.share_value == share_value:
@@ -1608,7 +1608,7 @@ def share_doc(request):
                 is_enable = False
             else:
                 is_enable = True
-            # 生成分享文档Token
+            # 生成分享手册Token
             share_token = hashlib.md5()
             share_token.update("{}_{}".format(doc_id,request.user.username).encode())
             share_token = share_token.hexdigest()
@@ -1632,10 +1632,10 @@ def share_doc(request):
                 }
             return JsonResponse({'status':True,'data':data})
         except ObjectDoesNotExist:
-            return JsonResponse({'status':False,'data':'文档不存在'})
+            return JsonResponse({'status':False,'data':'手册不存在'})
 
 
-# 验证文档分享码
+# 验证手册分享码
 def share_doc_check(request):
     doc_token = request.GET.get('surl', '')
     if request.method == 'GET':
@@ -1662,7 +1662,7 @@ def share_doc_check(request):
             return render(request, 'app_doc/share/share_check.html', locals())
 
 
-# 管理文档分享
+# 管理手册分享
 @login_required()
 @require_http_methods(['GET','POST'])
 def manage_doc_share(request):
@@ -1741,12 +1741,12 @@ def manage_doc_share(request):
             return JsonResponse({'status':True,'data':'ok'})
 
 
-# 创建文档模板
+# 创建手册模板
 @login_required()
 @require_http_methods(['GET',"POST"])
 def create_doctemp(request):
     if request.method == 'GET':
-        editor_type = "新建文档模板"
+        editor_type = "新建手册模板"
         # 获取用户的编辑器模式
         try:
             user_opt = UserOptions.objects.get(user=request.user)
@@ -1770,16 +1770,16 @@ def create_doctemp(request):
             else:
                 return JsonResponse({'status':False,'data':'模板标题不能为空'})
         except Exception as e:
-            logger.exception("创建文档模板出错")
+            logger.exception("创建手册模板出错")
             return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 修改文档模板
+# 修改手册模板
 @login_required()
 @require_http_methods(['GET',"POST"])
 def modify_doctemp(request,doctemp_id):
     if request.method == 'GET':
-        editor_type = '修改文档模板'
+        editor_type = '修改手册模板'
         try:
             doctemp = DocTemp.objects.get(id=doctemp_id)
             if request.user.id == doctemp.create_user.id:
@@ -1794,7 +1794,7 @@ def modify_doctemp(request,doctemp_id):
             else:
                 return HttpResponse('非法请求')
         except Exception as e:
-            logger.exception("访问文档模板修改页面出错")
+            logger.exception("访问手册模板修改页面出错")
             return render(request, '404.html')
     elif request.method == 'POST':
         try:
@@ -1813,11 +1813,11 @@ def modify_doctemp(request,doctemp_id):
             else:
                 return JsonResponse({'status':False,'data':'参数错误'})
         except Exception as e:
-            logger.exception("修改文档模板出错")
+            logger.exception("修改手册模板出错")
             return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 删除文档模板
+# 删除手册模板
 @login_required()
 def del_doctemp(request):
     try:
@@ -1832,11 +1832,11 @@ def del_doctemp(request):
         else:
             return JsonResponse({'status': False, 'data': '参数错误'})
     except Exception as e:
-        logger.exception("删除文档模板出错")
+        logger.exception("删除手册模板出错")
         return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 管理文档模板
+# 管理手册模板
 @login_required()
 @require_http_methods(['GET'])
 def manage_doctemp(request):
@@ -1868,11 +1868,11 @@ def manage_doctemp(request):
                 doctemps = paginator.page(paginator.num_pages)
         return render(request, 'app_doc/manage/manage_doctemp.html', locals())
     except Exception as e:
-        logger.exception("管理文档模板页面访问出错")
+        logger.exception("管理手册模板页面访问出错")
         return render(request, '404.html')
 
 
-# 获取指定文档模板
+# 获取指定手册模板
 @login_required()
 @require_http_methods(["POST"])
 def get_doctemp(request):
@@ -1884,36 +1884,36 @@ def get_doctemp(request):
         else:
             return JsonResponse({'status':False,'data':'参数错误'})
     except Exception as e:
-        logger.exception("获取指定文档模板出错")
+        logger.exception("获取指定手册模板出错")
         return JsonResponse({'status':False,'data':'请求出错'})
 
 
-# 获取指定文集的所有文档
+# 获取指定文集的所有手册
 @require_http_methods(["POST"])
 @logger.catch()
 def get_pro_doc(request):
     pro_id = request.POST.get('pro_id','')
     if pro_id != '':
-        # 获取文集所有文档的id、name和parent_doc3个字段
+        # 获取文集所有手册的id、name和parent_doc3个字段
         doc_list = Doc.objects.filter(top_doc=int(pro_id),status=1).values_list('id','name','parent_doc').order_by('parent_doc')
         item_list = []
-        # 遍历文档
+        # 遍历手册
         for doc in doc_list:
-            # 如果文档为顶级文档
+            # 如果手册为顶级手册
             if doc[2] == 0:
                 # 将其数据添加到列表中
                 item = [
                     doc[0],doc[1],doc[2],''
                 ]
                 item_list.append(item)
-            # 如果文档不是顶级文档
+            # 如果手册不是顶级手册
             else:
-                # 查询文档的上级文档
+                # 查询手册的上级手册
                 try:
                     parent = Doc.objects.get(id=doc[2])
                 except ObjectDoesNotExist:
-                    return JsonResponse({'status':False,'data':'文档id不存在'})
-                # 如果文档上级文档的上级是顶级文档，那么将其添加到列表
+                    return JsonResponse({'status':False,'data':'手册id不存在'})
+                # 如果手册上级手册的上级是顶级手册，那么将其添加到列表
                 if parent.parent_doc == 0: # 只要二级目录
                     item = [
                         doc[0],doc[1],doc[2],parent.name+' --> '
@@ -1924,20 +1924,20 @@ def get_pro_doc(request):
         return JsonResponse({'status':False,'data':'参数错误'})
 
 
-# 获取指定文集的文档树数据
+# 获取指定文集的手册树数据
 @require_http_methods(['POST'])
 @logger.catch()
 def get_pro_doc_tree(request):
     pro_id = request.POST.get('pro_id', None)
     if pro_id:
-        # 查询存在上级文档的文档
+        # 查询存在上级手册的手册
         parent_id_list = Doc.objects.filter(top_doc=pro_id,status=1).exclude(parent_doc=0).values_list('parent_doc',flat=True)
-        # 获取存在上级文档的上级文档ID
+        # 获取存在上级手册的上级手册ID
         # print(parent_id_list)
         doc_list = []
-        # 获取一级文档
+        # 获取一级手册
         top_docs = Doc.objects.filter(top_doc=pro_id,parent_doc=0,status=1).values('id','name','modify_time').order_by('sort')
-        # 遍历一级文档
+        # 遍历一级手册
         for doc in top_docs:
             top_item = {
                 'id':doc['id'],
@@ -1947,9 +1947,9 @@ def get_pro_doc_tree(request):
                 'spread':True,
                 'level':1
             }
-            # 如果一级文档存在下级文档，查询其二级文档
+            # 如果一级手册存在下级手册，查询其二级手册
             if doc['id'] in parent_id_list:
-                # 获取二级文档
+                # 获取二级手册
                 sec_docs = Doc.objects.filter(top_doc=pro_id,parent_doc=doc['id'],status=1).values('id','name','modify_time').order_by('sort')
                 top_item['children'] = []
                 for doc in sec_docs:
@@ -1960,9 +1960,9 @@ def get_pro_doc_tree(request):
                         'modify_time': doc['modify_time'],
                         'level':2
                     }
-                    # 如果二级文档存在下级文档，查询第三级文档
+                    # 如果二级手册存在下级手册，查询第三级手册
                     if doc['id'] in parent_id_list:
-                        # 获取三级文档
+                        # 获取三级手册
                         thr_docs = Doc.objects.filter(top_doc=pro_id,parent_doc=doc['id'],status=1).values('id','name','modify_time').order_by('sort')
                         sec_item['children'] = []
                         for doc in thr_docs:
@@ -1978,7 +1978,7 @@ def get_pro_doc_tree(request):
                     else:
                         top_item['children'].append(sec_item)
                 doc_list.append(top_item)
-            # 如果一级文档没有下级文档，直接保存
+            # 如果一级手册没有下级手册，直接保存
             else:
                 doc_list.append(top_item)
         return JsonResponse({'status':True,'data':doc_list})
@@ -2531,7 +2531,7 @@ def manage_attachment(request):
 # 搜索
 def search(request):
     kw = request.GET.get('kw', None)
-    search_type = request.GET.get('type', 'doc')  # 搜索类型，默认文档doc
+    search_type = request.GET.get('type', 'doc')  # 搜索类型，默认手册doc
     date_type = request.GET.get('d_type', 'recent')
     date_range = request.GET.get('d_range', 'all')  # 时间范围，默认不限，all
     project_range = request.GET.get('p_range', 0)  # 文集范围，默认不限，all
@@ -2572,7 +2572,7 @@ def search(request):
 
     # 存在搜索关键词
     if kw:
-        # 搜索文档
+        # 搜索手册
         if search_type == 'doc':
             if is_auth:
                 colla_list = [i.project.id for i in ProjectCollaborator.objects.filter(user=request.user)]  # 用户的协作文集
@@ -2585,14 +2585,14 @@ def search(request):
                 data_list = Doc.objects.filter(
                     Q(top_doc__in=view_list),  # 包含用户可浏览到的文集
                     Q(create_time__gte=start_date, create_time__lte=end_date),  # 筛选创建时间
-                    Q(name__icontains=kw) | Q(content__icontains=kw) | Q(pre_content__icontains=kw)  # 筛选文档标题和内容中包含搜索词
+                    Q(name__icontains=kw) | Q(content__icontains=kw) | Q(pre_content__icontains=kw)  # 筛选手册标题和内容中包含搜索词
                 ).order_by('-create_time')
             else:
                 view_list = [i.id for i in Project.objects.filter(role=0)]
                 data_list = Doc.objects.filter(
                     Q(top_doc__in=view_list),
                     Q(create_time__gte=start_date, create_time__lte=end_date),  # 筛选创建时间
-                    Q(name__icontains=kw) | Q(content__icontains=kw) | Q(pre_content__icontains=kw)  # 筛选文档标题和内容中包含搜索词
+                    Q(name__icontains=kw) | Q(content__icontains=kw) | Q(pre_content__icontains=kw)  # 筛选手册标题和内容中包含搜索词
                 ).order_by('-create_time')
 
         # 搜索文集
@@ -2629,11 +2629,11 @@ def search(request):
                 view_list = list(set(open_list).union(set(colla_list)))  # 合并上述两个文集ID列表
 
                 tag_list = Tag.objects.filter(name__icontains=kw) # 查询符合条件的标签
-                tag_doc_list = [i.doc.id for i in DocTag.objects.filter(tag__in=tag_list)] # 获取符合条件的标签文档
+                tag_doc_list = [i.doc.id for i in DocTag.objects.filter(tag__in=tag_list)] # 获取符合条件的标签手册
 
                 data_list = Doc.objects.filter(
                     Q(top_doc__in=view_list),  # 包含用户可浏览到的文集
-                    Q(id__in=tag_doc_list), # 包含符合条件标签的文档ID列表
+                    Q(id__in=tag_doc_list), # 包含符合条件标签的手册ID列表
                     Q(create_time__gte=start_date, create_time__lte=end_date),  # 筛选创建时间
                 ).order_by('-create_time')
             # 游客
@@ -2643,11 +2643,11 @@ def search(request):
                 view_list = list(set(open_list))
 
                 tag_list = Tag.objects.filter(name__icontains=kw)  # 查询符合条件的标签
-                tag_doc_list = [i.doc.id for i in DocTag.objects.filter(tag__in=tag_list)]  # 获取符合条件的标签文档
+                tag_doc_list = [i.doc.id for i in DocTag.objects.filter(tag__in=tag_list)]  # 获取符合条件的标签手册
 
                 data_list = Doc.objects.filter(
                     Q(top_doc__in=view_list),  # 包含用户可浏览到的文集
-                    Q(id__in=tag_doc_list),  # 包含符合条件标签的文档ID列表
+                    Q(id__in=tag_doc_list),  # 包含符合条件标签的手册ID列表
                     Q(create_time__gte=start_date, create_time__lte=end_date),  # 筛选创建时间
                 ).order_by('-create_time')
 
@@ -2670,7 +2670,7 @@ def search(request):
         return render(request,'app_doc/search.html')
 
 
-# 文档Markdown文件下载
+# 手册Markdown文件下载
 @require_http_methods(['GET',"POST"])
 def download_doc_md(request,doc_id):
     if request.user.is_authenticated:
@@ -2678,12 +2678,12 @@ def download_doc_md(request,doc_id):
             try:
                 doc = Doc.objects.get(id=doc_id)
             except ObjectDoesNotExist:
-                return JsonResponse({'status':False,'data':'文档不存在'})
+                return JsonResponse({'status':False,'data':'手册不存在'})
         else:
             try:
                 doc = Doc.objects.get(id=doc_id,create_user = request.user)
             except ObjectDoesNotExist:
-                return JsonResponse({'status':False,'data':'文档不存在'})
+                return JsonResponse({'status':False,'data':'手册不存在'})
     else:
         return render(request,'404.html')
 
@@ -2702,7 +2702,7 @@ def manage_overview(request):
         pro_list = Project.objects.filter(create_user=request.user).order_by('-create_time')
         colla_pro_cnt = ProjectCollaborator.objects.filter(user=request.user).count()
         pro_cnt = pro_list.count() + colla_pro_cnt # 文集总数
-        doc_cnt = Doc.objects.filter(create_user=request.user).count() # 文档总数
+        doc_cnt = Doc.objects.filter(create_user=request.user).count() # 手册总数
         total_tag_cnt = Tag.objects.filter(create_user=request.user).count()
         img_cnt = Image.objects.filter(user=request.user).count()
         attachment_cnt = Attachment.objects.filter(user=request.user).count()
@@ -2714,7 +2714,7 @@ def manage_overview(request):
         pass
 
 
-# 个人中心 - 文档标签
+# 个人中心 - 手册标签
 @login_required()
 @require_http_methods(['GET','POST'])
 def manage_doc_tag(request):
@@ -2769,11 +2769,11 @@ def manage_doc_tag(request):
                 tag_list = []
                 return JsonResponse({'status': True, 'data': tag_list})
             except:
-                logger.exception("获取文档标签出错")
+                logger.exception("获取手册标签出错")
                 return JsonResponse({'status': False, 'data': '出现错误'})
 
 
-# 标签文档关系页
+# 标签手册关系页
 def tag_docs(request,tag_id):
     # 获取标签
     try:
@@ -2781,25 +2781,25 @@ def tag_docs(request,tag_id):
         color_list = ['#37a2da', '#32c5e9', '#67e0e3', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#fb7293', '#e062ae', '#e062ae']
         # 获取标签信息
         tag = Tag.objects.get(id=int(tag_id))
-        # 获取标签的文档信息
+        # 获取标签的手册信息
         # 如果访问者已经登录
         if request.user.is_authenticated:
             # 判断是否为标签的创建者
             if request.user == tag.create_user:
-                # 获取标签的所有文档
+                # 获取标签的所有手册
                 view_list = [i.id for i in Project.objects.filter(create_user=request.user)]
                 docs = DocTag.objects.filter(tag=tag,doc__status=1)
             else:
-                # 获取有权限的文档
+                # 获取有权限的手册
                 colla_list = [i.project.id for i in ProjectCollaborator.objects.filter(user=request.user)]  # 用户的协作文集
                 open_list = [i.id for i in Project.objects.filter(
                     Q(role=0) | Q(create_user=tag.create_user)
                 )]  # 公开文集
 
                 view_list = list(set(open_list).union(set(colla_list)))  # 合并上述两个文集ID列表
-                # 查询可浏览文集的文档
+                # 查询可浏览文集的手册
                 doc_list = [i for i in Doc.objects.filter(top_doc__in=view_list,status=1)]
-                # 筛选可浏览的文档的标签文档
+                # 筛选可浏览的手册的标签手册
                 docs = DocTag.objects.filter(tag=tag,doc__in=doc_list)
 
         else:
@@ -2811,8 +2811,8 @@ def tag_docs(request,tag_id):
             doc_list = [i for i in Doc.objects.filter(top_doc__in=view_list,status=1)]
             docs = DocTag.objects.filter(tag=tag,doc__in=doc_list)
 
-        # 获取文档的其他标签信息
-        current_link_list = [] # 文档的所有标签ID列表
+        # 获取手册的其他标签信息
+        current_link_list = [] # 手册的所有标签ID列表
         for doc in docs:
             other_tags = [str(i.tag.id) for i in DocTag.objects.filter(~Q(tag=tag), doc=doc.doc)]
             current_link_list.extend(other_tags)
@@ -2847,9 +2847,9 @@ def tag_docs(request,tag_id):
                 }
             tag_nodes_list.append(item)
             # 查询非主标签的关联标签
-            sub_tags = DocTag.objects.filter(tag=t,doc__status=1,doc__top_doc__in=view_list) # 获取包含t标签的文档
+            sub_tags = DocTag.objects.filter(tag=t,doc__status=1,doc__top_doc__in=view_list) # 获取包含t标签的手册
             for sub_tag in sub_tags:
-                sub_docs = DocTag.objects.filter(doc=sub_tag.doc,doc__top_doc__in=view_list) # 获取包含文档的标签
+                sub_docs = DocTag.objects.filter(doc=sub_tag.doc,doc__top_doc__in=view_list) # 获取包含手册的标签
                 for sub_doc in sub_docs:
                     if str(sub_tag.tag.id) != str(sub_doc.tag.id):
                         item = {
@@ -2885,17 +2885,17 @@ def tag_docs(request,tag_id):
 
         return render(request, 'app_doc/tag_docs.html', locals())
     except Exception as e:
-        logger.exception("标签文档页访问异常")
+        logger.exception("标签手册页访问异常")
         return render(request, '404.html')
 
 
-# 标签文档页
+# 标签手册页
 @require_http_methods(['GET'])
 def tag_doc(request,tag_id,doc_id):
     try:
         if tag_id != '' and doc_id != '':
             doc = Doc.objects.get(id=int(doc_id), status=1)
-            # 获取文档的文集信息，以判断是否有权限访问
+            # 获取手册的文集信息，以判断是否有权限访问
             project = Project.objects.get(id=int(doc.top_doc))
             # 获取文集的协作用户信息
             if request.user.is_authenticated:
@@ -2932,13 +2932,13 @@ def tag_doc(request,tag_id,doc_id):
                     if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
                         return redirect('/check_viewcode/?to={}'.format(request.path))
 
-            # 获取文档内容
+            # 获取手册内容
             try:
                 # 获取标签信息
                 tag = Tag.objects.get(id=int(tag_id))
-                # 获取标签文档信息
+                # 获取标签手册信息
                 docs = DocTag.objects.filter(tag=tag)
-                # 获取文档的标签
+                # 获取手册的标签
                 doc_tags = DocTag.objects.filter(doc=doc)
             except ObjectDoesNotExist:
                 return render(request, '404.html')
@@ -2984,7 +2984,7 @@ def manage_self(request):
             return JsonResponse({'status':False,'data':'参数不正确'})
 
 
-# 文集文档收藏
+# 文集手册收藏
 @login_required()
 def my_collect(request):
     if request.method == 'GET':
@@ -3020,7 +3020,7 @@ def manage_collect(request):
     if request.method == 'GET':
         # 收藏文集数量
         collect_project_cnt = MyCollect.objects.filter(create_user=request.user, collect_type=2).count()
-        # 收藏文档数量
+        # 收藏手册数量
         collect_doc_cnt = MyCollect.objects.filter(create_user=request.user, collect_type=1).count()
         # 所有收藏数量
         all_cnt = collect_project_cnt + collect_doc_cnt

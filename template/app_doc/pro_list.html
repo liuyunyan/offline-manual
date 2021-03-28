@@ -90,7 +90,7 @@
             <div class="layui-form-item">
                 <!-- 筛选开始 -->
                 <div class="layui-inline">
-                    <div class="layui-input-inline">
+                    <!-- <div class="layui-input-inline">
                         <select name="role" lay-verify="" id="sel-role">
                             <option value="">{% trans "筛选" %}</option>
                             {% if request.user.is_authenticated %}
@@ -103,7 +103,7 @@
                             <option value="3">{% trans "访问码文集" %}</option>
                             {% endif %}
                         </select>
-                    </div>
+                    </div> -->
                     <div class="layui-input-inline">
                         <select name="sort" lay-verify="" id="sel-sort">
                             <option value="">{% trans "排序" %}</option>
@@ -226,14 +226,14 @@
                 <textarea name="desc" id="desc" placeholder="输入文集简介，不超过100个字，超出将被截断"  maxlength="100" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="layui-form-item">
+        <!-- <div class="layui-form-item">
             <label class="layui-form-label">权限</label>
             <div class="layui-input-block">
                 <input type="radio" name="project-role" value="0" title="公开" checked>
                 <input type="radio" name="project-role" value="1" title="私密">
             </div>
-        </div>
-        <div style="color:red;font-size:12px;">{% trans "*在可个人中心对文集权限进行进一步控制" %}</div>
+        </div> -->
+        <!-- <div style="color:red;font-size:12px;">{% trans "*在可个人中心对文集权限进行进一步控制" %}</div> -->
     </div>
     
 </div>

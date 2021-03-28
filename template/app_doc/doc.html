@@ -31,7 +31,7 @@
             <i class="layui-icon layui-icon-add-1"></i> <span class="layui-hide-xs">{% trans "添加" %}</span>
         </a>
     {% endif %}
-    <!-- 文档目录 -->
+    <!-- 手册目录 -->
     <div id="toc-container" class='sidebar doc-toc-hide'></div>
     
 {% endblock %}
@@ -78,25 +78,25 @@
         <i class="layui-icon layui-icon-log"></i> {{ doc.modify_time }}
     </span>
 
-    <!-- <button id="share" class="doc-bottom-btn" tooltip="{% trans '分享本文档' %}">
-        <i class="layui-icon layui-icon-share" ></i> {% trans "分享文档" %}
+    <!-- <button id="share" class="doc-bottom-btn" tooltip="{% trans '分享本手册' %}">
+        <i class="layui-icon layui-icon-share" ></i> {% trans "分享手册" %}
     </button> -->
 
     <span class="doc-bottom-icon">
         {% if request.user.is_authenticated %}
             {% if is_collect_doc %}
-            <i class="layui-icon layui-icon-star-fill collected" id="collect_doc"></i> {% trans "收藏文档" %}
+            <i class="layui-icon layui-icon-star-fill collected" id="collect_doc"></i> {% trans "收藏手册" %}
             {% else %}
-            <i class="layui-icon layui-icon-star" id="collect_doc"></i> {% trans "收藏文档" %}
+            <i class="layui-icon layui-icon-star" id="collect_doc"></i> {% trans "收藏手册" %}
             {% endif %}
         {% else %}
-            <i class="layui-icon layui-icon-star" title="请登录后收藏"></i> {% trans "收藏文档" %}
+            <i class="layui-icon layui-icon-star" title="请登录后收藏"></i> {% trans "收藏手册" %}
         {% endif %}
     </span>
 
     {% if request.user == doc.create_user or request.user.is_superuser %}
-    <button class="doc-bottom-btn" tooltip="{% trans '下载文档' %}" id="download_doc">
-        <i class="fa fa-download"></i> {% trans "下载文档" %}
+    <button class="doc-bottom-btn" tooltip="{% trans '下载手册' %}" id="download_doc">
+        <i class="fa fa-download"></i> {% trans "下载手册" %}
     </button>
     {% endif %}
 </div>
@@ -125,9 +125,9 @@
 {% endblock %}
 
 {% block right_widget %}
-<!-- 修改文档 -->
+<!-- 修改手册 -->
 {% if doc.create_user == request.user %}
-    <a class="editDoc" href="{% url 'modify_doc' doc_id=doc.id %}" title="{% trans '修改文档' %}"><i class="fa fa-pencil"></i></a>
+    <a class="editDoc" href="{% url 'modify_doc' doc_id=doc.id %}" title="{% trans '修改手册' %}"><i class="fa fa-pencil"></i></a>
 {% endif %}
 <!-- 目录 -->
 <div class="tocMenu" style="display: none;"><i class="fa fa-list"></i></div>
@@ -146,7 +146,7 @@
         </a>
     </div>
 </div>
-<!-- 分享文档选项卡模板 -->
+<!-- 分享手册选项卡模板 -->
 <div id="share_doc_div" style="display: none;">
     <div class="layui-tab-content">
         <div class="layui-form layui-form-pane">
@@ -204,13 +204,13 @@
     $.ajaxSetup({
         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
     });
-    // 非小屏默认展开文档目录
+    // 非小屏默认展开手册目录
     if(window.innerWidth > 1650){
         $(".sidebar").toggleClass("doc-toc-hide");
     }
-    // 切换文档目录显示与否
+    // 切换手册目录显示与否
     $(".tocMenu").click(function() {
-        console.log("切换文档目录显示")
+        console.log("切换手册目录显示")
         $(".sidebar").toggleClass("doc-toc-hide");
     });
     
@@ -218,7 +218,7 @@
     $('#content').on('click','a',function(e){
         e.target.target = '_blank';
     });
-    // 显示文档下载弹出框
+    // 显示手册下载弹出框
     $("#download_doc").click(function(r){
         var layer = layui.layer;
         layer.open({
@@ -247,7 +247,7 @@
         return str;
     };
     
-    // 更新文档分享状态
+    // 更新手册分享状态
     function updateDocShare(data){
         $.post("{% url 'share_doc' %}",data,function(r){
             if(r.status){
@@ -260,11 +260,11 @@
         })
     }
 
-    // 分享文档
+    // 分享手册
     $("#shareDoc").click(function(){
         layer.open({
             type:1,
-            title:'{% trans "分享文档" %}:{{doc.name}}',
+            title:'{% trans "分享手册" %}:{{doc.name}}',
             content:$("#share_doc_div"),
             area:'450px',
             success : function(index, layero) { // 成功弹出后回调
@@ -346,7 +346,7 @@
         }
     });  
 
-    // 更新文档分享密码
+    // 更新手册分享密码
     $("#updateShareValue").click(function(){
         $("#share_doc_value").val(randomWord(false,4));
         share_data['share_type'] = 1;

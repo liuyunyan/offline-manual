@@ -46,7 +46,7 @@
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
             <li class="layui-this">{% trans "协作用户" %}</li>
-            <li>{% trans "协作文档" %}</li>
+            <li>{% trans "协作手册" %}</li>
             </ul>
             <div class="layui-tab-content">
                 <!-- 协作用户 -->
@@ -66,9 +66,9 @@
                                     <td>{{ colla.user }}</td>
                                     <td>
                                         {% if colla.role == 0 %}
-                                        {% trans "新建文档，修改、删除新建的文档" %}
+                                        {% trans "新建手册，修改、删除新建的手册" %}
                                         {% else %}
-                                        {% trans "可操作所有文档" %}
+                                        {% trans "可操作所有手册" %}
                                         {% endif %}
                                     </td>
                                     <td>
@@ -86,12 +86,12 @@
                     </div>
                 </div>
                 <div class="layui-tab-item">
-                    <!-- 协作文档 -->
+                    <!-- 协作手册 -->
                     <div class="layui-row">
                         <table class="layui-table">
                             <thead>
                                 <tr>
-                                    <th>{% trans "文档名称" %}</th>
+                                    <th>{% trans "手册名称" %}</th>
                                     <th>{% trans "创建用户" %}</th>
                                     <th>{% trans "创建时间" %}</th>
                                     <th>{% trans "操作" %}</th>
@@ -231,14 +231,14 @@
                 },
             })
         };
-        // 删除文档
+        // 删除手册
         delDoc = function(doc_id){
             layer.open({
                 type:1,
-                title:'删除文档',
+                title:'删除手册',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将删除此文档！</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将删除此手册！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
@@ -274,8 +274,8 @@
         </select>
         <div class="layui-form-item">
           <!-- <div class="layui-input-inline"> -->
-            <input type="radio" name="add-role" value="0" title="初级权限 - 可新建文档，修改、删除自己创建的文档" checked>
-            <input type="radio" name="add-role" value="1" title="高级权限 - 可操作所有文档" >
+            <input type="radio" name="add-role" value="0" title="初级权限 - 可新建手册，修改、删除自己创建的手册" checked>
+            <input type="radio" name="add-role" value="1" title="高级权限 - 可操作所有手册" >
           <!-- </div> -->
         </div>
     </div>
@@ -285,8 +285,8 @@
     <div style="margin:10px;" class="layui-form">
         <div class="layui-form-item">
           <!-- <div class="layui-input-inline"> -->
-            <input type="radio" name="modify-role" value="0" title="初级权限 - 可新建文档，修改、删除自己创建的文档" checked>
-            <input type="radio" name="modify-role" value="1" title="高级权限 - 可操作所有文档" >
+            <input type="radio" name="modify-role" value="0" title="初级权限 - 可新建手册，修改、删除自己创建的手册" checked>
+            <input type="radio" name="modify-role" value="1" title="高级权限 - 可操作所有手册" >
           <!-- </div> -->
         </div>
     </div>

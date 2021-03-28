@@ -55,13 +55,13 @@
             <form class="layui-form" action=""  method='POST'>
                 {% csrf_token %}
                 <div class="layui-form-item">
-                    <h4>{% trans "你正在访问私密文档：" %}</h4><br>
+                    <h4>{% trans "你正在访问私密手册：" %}</h4><br>
                     <strong><u>{{ doc_share.doc.name }}</u></strong>
                     <br><span style='color:red;margin-bottom: 10px;'>{{ errormsg }}</span>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-inline login-input">
-                      <input type="text" name="share_value" required  lay-verify="required" placeholder="{% trans '请输入文档分享码' %}" autocomplete="off" class="layui-input" >
+                      <input type="text" name="share_value" required  lay-verify="required" placeholder="{% trans '请输入手册分享码' %}" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
                 <div class="layui-form-item">

@@ -22,8 +22,8 @@ class Migration(migrations.Migration):
                 ('doc', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_doc.Doc')),
             ],
             options={
-                'verbose_name': '文档分享',
-                'verbose_name_plural': '文档分享',
+                'verbose_name': '手册分享',
+                'verbose_name_plural': '手册分享',
             },
         ),
     ]

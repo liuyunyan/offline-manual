@@ -29,13 +29,13 @@
 {% endblock %}
 
 {% block page_content %}
-    <!-- 引入文档过滤器 -->
+    <!-- 引入手册过滤器 -->
     {% load doc_filter %}
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
         <ul class="layui-tab-title">
             <li class="layui-this">{% trans "简介" %}</li>
             <li>{% trans "目录大纲" %}</li>
-            <li>{% trans "最新文档" %}</li>
+            <li>{% trans "最新手册" %}</li>
             {% if enable_project_report %}
             <li>{% trans "文集下载" %}</li>
             {% endif %}
@@ -51,7 +51,7 @@
             <div class="layui-tab-item">
                 <ul class="summary" id="doc-tree"></ul>
             </div>
-            <!-- 最新文档 -->
+            <!-- 最新手册 -->
             <div class="layui-tab-item">
                 {% for doc in new_docs %}
                 <div>
@@ -113,7 +113,7 @@
         downloadFile = function(download_link){
             layer.open({
                 type:1,
-                title:"下载导出文档",
+                title:"下载导出手册",
                 area:"300px",
                 id:"downloadMd",
                 content:'<p style="text-align:center;color:red;">请尽快下载，避免失效！</p><br><a class="layui-btn layui-btn-normal layui-btn-fluid download-md-link" href="'+ download_link + '" download="" >点击下载文件</a>',
@@ -140,7 +140,7 @@
     {% endfor %}
 </span>
 
-<!-- <button id="share" class="doc-bottom-btn" tooltip="分享本文档" style="padding-left: 20px;">
+<!-- <button id="share" class="doc-bottom-btn" tooltip="分享本手册" style="padding-left: 20px;">
     <i class="fa fa-share-alt" ></i> {% trans "分享" %}
 </button> -->
 {% endblock %}
@@ -155,7 +155,7 @@
 </style>
 <script src="{% static 'vditor/dist/method.min.js' %}"></script>
 <script>
-    // 生成文集简介中的文档大纲
+    // 生成文集简介中的手册大纲
     $.ajaxSetup({
         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
     });
@@ -169,27 +169,27 @@
                 var toc_str = ""
                 layui.each(r.data,function(index,item){
                     toc_str += "<li>"
-                    if(item['children'] != undefined){ // 存在二级文档
+                    if(item['children'] != undefined){ // 存在二级手册
                         li = '<div class="project-toc-left"><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></div><div class="project-toc-right layui-hide-xs">' + util.toDateString(item.modify_time,"yyyy-MM-dd") + '</div>' +'<ul class="sub-menu">'
                         toc_str += li
-                        layui.each(item['children'],function(index,item){// 遍历二级文档
+                        layui.each(item['children'],function(index,item){// 遍历二级手册
                             toc_str += '<li>'
-                            if(item['children'] != undefined){ //存在三级文档
+                            if(item['children'] != undefined){ //存在三级手册
                                 li = '<div class="project-toc-left"><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></div><div class="project-toc-right layui-hide-xs">' + util.toDateString(item.modify_time,"yyyy-MM-dd") + '</div>' +'<ul class="sub-menu">'
                                 toc_str += li
-                                layui.each(item['children'],function(index,item){ // 遍历三级文档
+                                layui.each(item['children'],function(index,item){ // 遍历三级手册
                                     li = '<li><div class="project-toc-left"><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></div><div class="project-toc-right layui-hide-xs">' + util.toDateString(item.modify_time,"yyyy-MM-dd") + '</div></li>'
                                     toc_str += li
                                 })
                                 toc_str += '</ul>'
-                            }else{// 不存在三级文档
+                            }else{// 不存在三级手册
                                 li = '<div class="project-toc-left"><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></div><div class="project-toc-right layui-hide-xs">' + util.toDateString(item.modify_time,"yyyy-MM-dd") + '</div>'
                                 toc_str += li
                             }
                             toc_str += '</li>'
                         })    
                         toc_str += '</ul>'
-                    }else{//不存在二级文档
+                    }else{//不存在二级手册
                        li = '<div class="project-toc-left"><a href="/project-'+'{{project.id}}'+'/doc-'+item.id+'/" title="'+item.title+'">'+item.title+'</a></div><div class="project-toc-right layui-hide-xs">' + util.toDateString(item.modify_time,"yyyy-MM-dd") + '</div>'
                        toc_str += li
                     }
@@ -197,7 +197,7 @@
                 });
                 $("#doc-tree").append(toc_str);
             }else{
-                layer.msg("获取文集文档大纲失败！")
+                layer.msg("获取文集手册大纲失败！")
             }
             layer.closeAll('loading')
         });

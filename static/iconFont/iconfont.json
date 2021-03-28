@@ -3,11 +3,11 @@
   "name": "电子手册图标",
   "font_family": "iconfont",
   "css_prefix_text": "mrdoc-icon-",
-  "description": "用于电子手册的文集文档图标",
+  "description": "用于电子手册的文集手册图标",
   "glyphs": [
     {
       "icon_id": "8389369",
-      "name": "文档",
+      "name": "手册",
       "font_class": "wendang",
       "unicode": "e645",
       "unicode_decimal": 58949

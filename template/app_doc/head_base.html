@@ -12,7 +12,7 @@
         <div style="margin:12px;" class="layui-hide-xs">
             <form method="get" action="{% url 'doc_search' %}" target="_blank">
             <div class="layui-input-inline">
-                <input class="layui-input mrdoc-search-input" placeholder="{% trans '搜索文档' %}" name="q"/>
+                <input class="layui-input mrdoc-search-input" placeholder="{% trans '搜索手册' %}" name="q"/>
                 <button type="submit" style="position: absolute;top:12px;right: 8px;border: none;background-color: white;">
                     <i class="layui-icon layui-icon-search" ></i>
                 </button>
@@ -25,7 +25,7 @@
             </a>
         </div>
         
-        <!-- 新建文档按钮 -->
+        <!-- 新建手册按钮 -->
         <div class="layui-hide-xs">
             <ul class="layui-nav">
                 <li class="layui-nav-item">
@@ -36,7 +36,7 @@
                         <dd>
                             <a href="{% url 'create_doc' %}" target="_blank">
                                 <img src="{% static 'icon_img/create-doc-icon.svg' %}" height="14px" width="14px"></img>
-                                <span class="layui-hide-xs">{% trans "新建文档" %}</span>
+                                <span class="layui-hide-xs">{% trans "新建手册" %}</span>
                             </a>
                         </dd>
                         {% if request.user.is_authenticated %}
@@ -70,9 +70,9 @@
                     </dd>
                     {% endif %}
                     <dd class="layui-hide-md layui-hide-sm layui-hide-lg">
-                        <a href="{% url 'create_doc' %}" title="新建文档">
+                        <a href="{% url 'create_doc' %}" title="新建手册">
                             <i class="layui-icon layui-icon-add-1 layui-hide-md"></i>
-                            <span class="layui-hide-xs">{% trans "新建文档" %}</span>
+                            <span class="layui-hide-xs">{% trans "新建手册" %}</span>
                         </a>
                     </dd>
                     <dd>
@@ -101,7 +101,8 @@
                 <i class="layui-icon layui-icon-username"></i> {% trans "游客" %}
                 </a>
                 <dl class="layui-nav-child">
-                    {% if close_register == 'on' %}
+                    {% if True %}
+                    <!-- close_register == 'on' -->
                     <dd><a href="{% url 'login' %}">{% trans "登录" %}</a></dd>
                     {% else %}
                     <dd><a href="{% url 'register' %}">{% trans "注册" %}</a></dd>

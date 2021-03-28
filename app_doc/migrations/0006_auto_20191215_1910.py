@@ -12,11 +12,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='doc',
-            options={'verbose_name': '文档', 'verbose_name_plural': '文档'},
+            options={'verbose_name': '手册', 'verbose_name_plural': '手册'},
         ),
         migrations.AddField(
             model_name='doc',
             name='status',
-            field=models.IntegerField(choices=[(0, 0), (1, 1)], default=1, verbose_name='文档状态'),
+            field=models.IntegerField(choices=[(0, 0), (1, 1)], default=1, verbose_name='手册状态'),
         ),
     ]

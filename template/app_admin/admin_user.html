@@ -81,7 +81,7 @@
                         ,cols: [[
                             {field:'username',title:'用户名',width:160},
                             {field:'first_name',title:'昵称',width:160},
-                            {field:'email',title:'电子邮箱',width:160},
+                            // {field:'email',title:'电子邮箱',width:160},
                             {field:'is_superuser',title:'用户角色',width:100,templet:'#userRole'},
                             {field:'date_joined',title:'注册时间',width:200},
                             {field:'last_login',title:'最后登录时间',width:200},
@@ -194,7 +194,7 @@
                 title:'删除用户',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将删除用户'+username+'及其文集文档！协作文档将转移给文集所有者</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将删除用户'+username+'及其文集手册！协作手册将转移给文集所有者</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {

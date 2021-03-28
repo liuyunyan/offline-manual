@@ -19,7 +19,7 @@
               <div class="layui-input-block">
                 <input type="radio" name="status" title="全部({{all_cnt}})" value="-1" lay-skin="primary" checked lay-filter="collect_type">
                 <input type="radio" name="status" title="文集({{collect_project_cnt}})" value="2"  lay-skin="primary" lay-filter="collect_type">
-                <input type="radio" name="status" title="文档({{collect_doc_cnt}})" value="1" lay-skin="primary" lay-filter="collect_type">
+                <input type="radio" name="status" title="手册({{collect_doc_cnt}})" value="1" lay-skin="primary" lay-filter="collect_type">
               </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
     </button>
 </script>
 
-<!-- 文档名称 -->
+<!-- 手册名称 -->
 <script type="text/html" id="collect-name">
     {% verbatim %}
         {{#if (d.type == 1) { }}

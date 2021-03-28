@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='doc',
             name='parent_doc',
-            field=models.IntegerField(default=0, verbose_name='上级文档'),
+            field=models.IntegerField(default=0, verbose_name='上级手册'),
         ),
     ]

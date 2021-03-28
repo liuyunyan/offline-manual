@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="keywords" content="{% block keyword %}{% endblock %}mrdoc"/>
     <meta name="description" content="{% block description %}{% endblock %}" />
-    <title>{% trans "文档历史版本对比：" %}{{ doc.name }} - {% if site_name != None and site_name != '' %}{{site_name}} {% else %}{% trans "电子手册" %}{% endif %}</title>
+    <title>{% trans "手册历史版本对比：" %}{{ doc.name }} - {% if site_name != None and site_name != '' %}{{site_name}} {% else %}{% trans "电子手册" %}{% endif %}</title>
     <link href="{% static 'layui/css/layui.css' %}?version={{mrdoc_version}}" rel="stylesheet">
     <link rel="icon" href="{% static 'favicon_16.png' %}"/>
     <link href="{% static 'mrdoc/mrdoc.css' %}?version={{mrdoc_version}}" rel="stylesheet">
@@ -34,7 +34,7 @@
     <!-- 左侧工具栏 -->
     <div class="doc-summary">
         <div class="project-title"><i class="fa fa-edit"></i> {% trans "电子手册编辑器" %}<br>
-            <span style="font-size: 14px;">{% trans "你正在：对比文档历史版本" %}</span>
+            <span style="font-size: 14px;">{% trans "你正在：对比手册历史版本" %}</span>
         </div>
         <hr>
         <div class="layui-row" style="padding: 10px;">
@@ -65,7 +65,7 @@
 
     <!-- 右侧编辑器栏 -->
     <div class="doc-body">
-        <!-- 文档导航 -->
+        <!-- 手册导航 -->
         <div class="doc-header" role="navigation">
             <a class="btn pull-left js-toolbar-action" aria-label="" href="javascript:void(0);" title="{% trans '切换侧边栏' %}">
                 <i class="layui-icon layui-icon-spread-left"></i>
@@ -75,10 +75,10 @@
                 <i class="layui-icon layui-icon-home"></i> <span class="layui-hide-xs">{% trans "首页" %}</span>
             </a>
         </div>
-        <!-- 文档主体 -->
+        <!-- 手册主体 -->
         <div class="doc-body-content" style="padding-left: 15px;">
             <div class="mrdoc-body-content-div">
-                <!-- 文档内容 -->
+                <!-- 手册内容 -->
                 <div class="mrdoc-editor-content">
                     <div style="display: none">
                         <textarea id="doc">{{ doc.pre_content }}</textarea>

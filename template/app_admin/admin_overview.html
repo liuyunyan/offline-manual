@@ -41,7 +41,7 @@
         </div>
         <div class="layui-col-xs6 layui-col-md3">
             <div class="layui-card top-panel">
-                <div class="layui-card-header">文档总数</div>
+                <div class="layui-card-header">手册总数</div>
                 <div class="layui-card-body">
                     <div class="layui-row layui-col-space5">
                         <div class="layui-col-xs8 layui-col-md8 top-panel-number" style="color: #28333E;" id="doc_cnt">
@@ -104,11 +104,11 @@
                                         src="{% static 'PearAdminLayui/avatar.svg' %}"></a></div>
                             <div>
                                 {% if doc.status == 1 %}
-                                <p>{{doc.create_user.first_name}} 发布了文档 <a href="{% url 'doc' doc.top_doc doc.id %}" target="_blank">{{doc.name}}</a></p>
+                                <p>{{doc.create_user.first_name}} 发布了手册 <a href="{% url 'doc' doc.top_doc doc.id %}" target="_blank">{{doc.name}}</a></p>
                                 {% elif doc.status == 0 %}
-                                <p>{{doc.create_user.first_name}} 保存了文档 <a href="{% url 'modify_doc' doc.id %}" target="_blank">{{doc.name}}</a></p>
+                                <p>{{doc.create_user.first_name}} 保存了手册 <a href="{% url 'modify_doc' doc.id %}" target="_blank">{{doc.name}}</a></p>
                                 {% else %}
-                                <p>{{doc.create_user.first_name}} 删除了文档 <a>{{doc.name}}</a></p>
+                                <p>{{doc.create_user.first_name}} 删除了手册 <a>{{doc.name}}</a></p>
                                 {% endif %}
                                 <span>{{doc.modify_time}}</span>
                             </div>
@@ -128,7 +128,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">标题</label>
                             <div class="layui-input-block">
-                            <input type="text" id="doc_name" name="doc_name" required  lay-verify="required" placeholder="请输入文档标题" autocomplete="off" class="layui-input">
+                            <input type="text" id="doc_name" name="doc_name" required  lay-verify="required" placeholder="请输入手册标题" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -236,7 +236,7 @@
             // window.onresize = function() {
             //     echartsRecords.resize();
             // };
-            // 保存文档草稿
+            // 保存手册草稿
             manage_overview_save_doc = function(){
                 $('button.layui-btn').attr("disabled",true);
                 $('button.layui-btn').addClass('layui-btn-disabled');
@@ -248,7 +248,7 @@
                 }
                 console.log(data)
                 if(data.doc_name == ""){
-                    layer.msg('请输入文档标题！');
+                    layer.msg('请输入手册标题！');
                     $('button.layui-btn').attr("disabled",false);
                     $('button.layui-btn').removeClass('layui-btn-disabled');
                 }

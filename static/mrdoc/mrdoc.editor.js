@@ -568,7 +568,7 @@ upload_docx_doc.render({
 $("#doc-tag-set").click(function(){
     layer.open({
         type:1,
-        title:"文档标签设置",
+        title:"手册标签设置",
         content:$("#doc-tag-div"),
         area:['300px'],
         btn:['确定']

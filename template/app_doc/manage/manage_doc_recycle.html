@@ -1,7 +1,7 @@
 {% extends 'app_doc/user/user_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}{% trans "文档回收站管理" %}{% endblock %}
+{% block title %}{% trans "手册回收站管理" %}{% endblock %}
 {% block content %}
 <div class="layui-card">
     <div class="layui-card-body">
@@ -20,8 +20,8 @@
             <table class="layui-table"  id="doctemp-list" lay-skin="nob" lay-even>
         <thead>
             <tr>
-                <th>{% trans "文档名称" %}</th>
-                <th>{% trans "上级文档" %}</th>
+                <th>{% trans "手册名称" %}</th>
+                <th>{% trans "上级手册" %}</th>
                 <th>{% trans "所属文集" %}</th>
                 <th>{% trans "创建时间" %}</th>
                 <th>{% trans "删除时间" %}</th>
@@ -87,14 +87,14 @@
         $.ajaxSetup({
                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
             });
-        // 删除文档
+        // 删除手册
         delDoc = function(doc_id){
             layer.open({
                 type:1,
-                title:'删除文档',
+                title:'删除手册',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将彻底删除此文档！</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将彻底删除此手册！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
@@ -118,14 +118,14 @@
                 },
             });
         };
-        // 还原文档
+        // 还原手册
         restoreDoc = function(doc_id){
             layer.open({
                 type:1,
-                title:'还原文档',
+                title:'还原手册',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">提示：文档将还原为草稿状态！</div>',
+                content:'<div style="margin-left:10px;">提示：手册将还原为草稿状态！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
@@ -156,7 +156,7 @@
                 title:'清空回收站',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将彻底删除回收站所有文档！</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将彻底删除回收站所有手册！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
@@ -186,7 +186,7 @@
                 title:'还原回收站',
                 area:'300px;',
                 id:'delPro',//配置ID
-                content:'<div style="margin-left:10px;">警告：此操作将还原回收站所有文档为草稿状态！</div>',
+                content:'<div style="margin-left:10px;">警告：此操作将还原回收站所有手册为草稿状态！</div>',
                 btn:['确定','取消'], //添加按钮
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {

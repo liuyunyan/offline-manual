@@ -7,7 +7,7 @@
 from haystack import indexes
 from app_doc.models import *
 
-# 文档索引
+# 手册索引
 class DocIndex(indexes.SearchIndex,indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     top_doc = indexes.IntegerField(model_attr='top_doc')

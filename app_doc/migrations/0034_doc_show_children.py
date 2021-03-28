@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='doc',
             name='show_children',
-            field=models.BooleanField(default=False, verbose_name='显示下级文档'),
+            field=models.BooleanField(default=False, verbose_name='显示下级手册'),
         ),
     ]

@@ -128,7 +128,7 @@ class ProjectView(APIView):
             # 获取文集的协作用户信息
             # print(request.auth)
             # print(request.user)
-            if request.auth:  # 对登陆用户查询其协作文档信息
+            if request.auth:  # 对登陆用户查询其协作手册信息
                 colla_user = ProjectCollaborator.objects.filter(project=project, user=request.user).count()
             else:
                 colla_user = 0
@@ -396,7 +396,7 @@ class ProjectView(APIView):
                 if pro_id != '':
                     pro = Project.objects.get(id=pro_id)
                     if (request.user == pro.create_user) or request.user.is_superuser:
-                        # 删除文集下的文档
+                        # 删除文集下的手册
                         pro_doc_list = Doc.objects.filter(top_doc=int(pro_id))
                         pro_doc_list.delete()
                         # 删除文集
@@ -425,17 +425,17 @@ class ProjectView(APIView):
         return Response(resp)
 
 
-# 文档视图
+# 手册视图
 class DocView(APIView):
     authentication_classes = (AppAuth,)
 
-    # 获取文档
+    # 获取手册
     def get(self,request):
         pro_id = request.query_params.get('pid','') # 文集ID
-        doc_id = request.query_params.get('did','') # 文档ID
+        doc_id = request.query_params.get('did','') # 手册ID
         doc_format = request.query_params.get('type','json') # 返回格式
 
-        # 存在文集ID和文档ID，进行数据库检索
+        # 存在文集ID和手册ID，进行数据库检索
         if pro_id != '' and doc_id != '':
             # 获取文集信息
             project = Project.objects.get(id=int(pro_id))
@@ -473,7 +473,7 @@ class DocView(APIView):
                     if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
                         return Response({'code':3})
 
-            # 获取文档内容
+            # 获取手册内容
             try:
                 doc = Doc.objects.get(id=int(doc_id), status=1)
                 if doc_format == 'json':
@@ -488,7 +488,7 @@ class DocView(APIView):
                     logger.info(doc_format)
             except ObjectDoesNotExist:
                 return Response({'code':4})
-        # 不存在文集ID和文档ID，返回用户自己的文档列表
+        # 不存在文集ID和手册ID，返回用户自己的手册列表
         else:
             if request.auth:
                 doc_list = Doc.objects.filter(create_user=request.user,status=1).order_by('-modify_time')
@@ -504,7 +504,7 @@ class DocView(APIView):
             else:
                 return Response({'code':4})
 
-    # 新建文档
+    # 新建手册
     def post(self, request):
         try:
             project = request.data.get('project','')
@@ -519,7 +519,7 @@ class DocView(APIView):
                 check_project = Project.objects.filter(id=project,create_user=request.user)
                 colla_project = ProjectCollaborator.objects.filter(project=project,user=request.user)
                 if check_project.count() > 0 or colla_project.count() > 0:
-                    # 创建文档
+                    # 创建手册
                     doc = Doc.objects.create(
                         name=doc_name,
                         content = doc_content,
@@ -534,35 +534,35 @@ class DocView(APIView):
                 else:
                     return Response({'code':2,'data':'无权操作此文集'})
             else:
-                return Response({'code':5,'data':'请确认文档标题、文集正确'})
+                return Response({'code':5,'data':'请确认手册标题、文集正确'})
         except Exception as e:
-            logger.exception("api新建文档异常")
+            logger.exception("api新建手册异常")
             return Response({'status':4,'data':'请求出错'})
 
-    # 修改文档
+    # 修改手册
     def put(self, request):
         try:
-            doc_id = request.data.get('doc_id','') # 文档ID
+            doc_id = request.data.get('doc_id','') # 手册ID
             project = request.data.get('project', '') # 文集ID
-            parent_doc = request.data.get('parent_doc', '') # 上级文档ID
-            doc_name = request.data.get('doc_name', '') # 文档名称
-            doc_content = request.data.get('content', '') # 文档内容
-            pre_content = request.data.get('pre_content', '') # 文档Markdown格式内容
-            sort = request.data.get('sort', '') # 文档排序
-            status = request.data.get('status',1) # 文档状态
+            parent_doc = request.data.get('parent_doc', '') # 上级手册ID
+            doc_name = request.data.get('doc_name', '') # 手册名称
+            doc_content = request.data.get('content', '') # 手册内容
+            pre_content = request.data.get('pre_content', '') # 手册Markdown格式内容
+            sort = request.data.get('sort', '') # 手册排序
+            status = request.data.get('status',1) # 手册状态
 
             if doc_id != '' and project != '' and doc_name != '' and project != '-1':
                 doc = Doc.objects.get(id=doc_id)
                 pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)
-                # 验证用户有权限修改文档 - 文档的创建者或文集的高级协作者
+                # 验证用户有权限修改手册 - 手册的创建者或文集的高级协作者
                 if (request.user == doc.create_user) or (pro_colla[0].role == 1):
-                    # 将现有文档内容写入到文档历史中
+                    # 将现有手册内容写入到手册历史中
                     DocHistory.objects.create(
                         doc = doc,
                         pre_content = doc.pre_content,
                         create_user = request.user
                     )
-                    # 更新文档内容
+                    # 更新手册内容
                     Doc.objects.filter(id=int(doc_id)).update(
                         name=doc_name,
                         content=doc_content,
@@ -578,38 +578,38 @@ class DocView(APIView):
             else:
                 return Response({'code': 5,'data':'参数错误'})
         except Exception as e:
-            logger.exception("api修改文档出错")
+            logger.exception("api修改手册出错")
             return Response({'code':4,'data':'请求出错'})
 
-    # 删除文档
+    # 删除手册
     def delete(self, request):
         try:
-            # 获取文档ID
+            # 获取手册ID
             doc_id = request.data.get('doc_id', None)
             if doc_id:
-                # 查询文档
+                # 查询手册
                 try:
                     doc = Doc.objects.get(id=doc_id)
-                    project = Project.objects.get(id=doc.top_doc)  # 查询文档所属的文集
-                    # 获取文档所属文集的协作信息
+                    project = Project.objects.get(id=doc.top_doc)  # 查询手册所属的文集
+                    # 获取手册所属文集的协作信息
                     pro_colla = ProjectCollaborator.objects.filter(project=project, user=request.user)  #
                     if pro_colla.exists():
                         colla_user_role = pro_colla[0].role
                     else:
                         colla_user_role = 0
                 except ObjectDoesNotExist:
-                    return Response({'code': 1, 'data': '文档不存在'})
+                    return Response({'code': 1, 'data': '手册不存在'})
                 if (request.user == doc.create_user) or (colla_user_role == 1) or (request.user == project.create_user):
                     # 修改状态为删除
                     doc.status = 3
                     doc.modify_time = datetime.datetime.now()
                     doc.save()
-                    # 修改其下级所有文档状态为删除
-                    chr_doc = Doc.objects.filter(parent_doc=doc_id)  # 获取下级文档
-                    chr_doc_ids = chr_doc.values_list('id', flat=True)  # 提取下级文档的ID
-                    chr_doc.update(status=3, modify_time=datetime.datetime.now())  # 修改下级文档的状态为删除
+                    # 修改其下级所有手册状态为删除
+                    chr_doc = Doc.objects.filter(parent_doc=doc_id)  # 获取下级手册
+                    chr_doc_ids = chr_doc.values_list('id', flat=True)  # 提取下级手册的ID
+                    chr_doc.update(status=3, modify_time=datetime.datetime.now())  # 修改下级手册的状态为删除
                     Doc.objects.filter(parent_doc__in=chr_doc_ids).update(status=3,
-                                                                          modify_time=datetime.datetime.now())  # 修改下级文档的下级文档状态
+                                                                          modify_time=datetime.datetime.now())  # 修改下级手册的下级手册状态
 
                     return Response({'code': 0, 'data': '删除完成'})
                 else:
@@ -617,15 +617,15 @@ class DocView(APIView):
             else:
                 return Response({'code': 5, 'data': '参数错误'})
         except Exception as e:
-            logger.exception("api删除文档出错")
+            logger.exception("api删除手册出错")
             return Response({'code': 4, 'data': '请求出错'})
 
 
-# 文档模板视图
+# 手册模板视图
 class DocTempView(APIView):
     authentication_classes = (AppAuth,)
 
-    # 获取文档模板
+    # 获取手册模板
     def get(self, request):
         if request.auth:
             temp_id = request.query_params.get('id','')
@@ -664,7 +664,7 @@ class DocTempView(APIView):
             else:
                 return Response({'code':6,'data':'请登录'})
         except Exception as e:
-            logger.exception("api创建文档模板出错")
+            logger.exception("api创建手册模板出错")
             return Response({'code':4,'data':'请求出错'})
 
     def put(self, request):
@@ -674,7 +674,7 @@ class DocTempView(APIView):
             content = request.data.get('content','')
             if doctemp_id != '' and name !='':
                 doctemp = DocTemp.objects.get(id=doctemp_id)
-                # 验证请求用户为文档模板的创建者
+                # 验证请求用户为手册模板的创建者
                 if request.user == doctemp.create_user:
                     doctemp.name = name
                     doctemp.content = content
@@ -685,7 +685,7 @@ class DocTempView(APIView):
             else:
                 return Response({'code':5,'data':'参数错误'})
         except Exception as e:
-            logger.exception("api修改文档模板出错")
+            logger.exception("api修改手册模板出错")
             return Response({'code':4,'data':'请求出错'})
 
     def delete(self, request):
@@ -701,7 +701,7 @@ class DocTempView(APIView):
             else:
                 return Response({'code': 5, 'data': '参数错误'})
         except Exception as e:
-            logger.exception("api删除文档模板出错")
+            logger.exception("api删除手册模板出错")
             return Response({'code': 4, 'data': '请求出错'})
 
 

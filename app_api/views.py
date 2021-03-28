@@ -132,24 +132,24 @@ def get_projects(request):
         return JsonResponse({'status':False,'data':'系统异常'})
 
 
-# 获取文集下的文档列表
+# 获取文集下的手册列表
 def get_docs(request):
     token = request.GET.get('token', '')
     try:
         token = UserToken.objects.get(token=token)
         pid = request.GET.get('pid','')
-        docs = Doc.objects.filter(create_user=token.user,top_doc=pid)  # 查询文集下的文档
+        docs = Doc.objects.filter(create_user=token.user,top_doc=pid)  # 查询文集下的手册
         doc_list = []
         for doc in docs:
             item = {
-                'id': doc.id,  # 文档ID
-                'name': doc.name,  # 文档名称
-                'parent_doc':doc.parent_doc, # 上级文档
+                'id': doc.id,  # 手册ID
+                'name': doc.name,  # 手册名称
+                'parent_doc':doc.parent_doc, # 上级手册
                 'top_doc':doc.top_doc, # 所属文集
-                'status':doc.status, # 文档状态
-                'create_time': doc.create_time,  # 文档创建时间
-                'modify_time': doc.modify_time,  # 文档的修改时间
-                'create_user': doc.create_user.username  # 文档的创建者
+                'status':doc.status, # 手册状态
+                'create_time': doc.create_time,  # 手册创建时间
+                'modify_time': doc.modify_time,  # 手册的修改时间
+                'create_user': doc.create_user.username  # 手册的创建者
             }
             doc_list.append(item)
         return JsonResponse({'status': True, 'data': doc_list})
@@ -160,24 +160,24 @@ def get_docs(request):
         return JsonResponse({'status': False, 'data': '系统异常'})
 
 
-# 获取单篇文档
+# 获取单篇手册
 def get_doc(request):
     token = request.GET.get('token', '')
     try:
         token = UserToken.objects.get(token=token)
         did = request.GET.get('did', '')
-        doc = Doc.objects.get(create_user=token.user, id=did)  # 查询文集下的文档
+        doc = Doc.objects.get(create_user=token.user, id=did)  # 查询文集下的手册
 
         item = {
-            'id': doc.id,  # 文档ID
-            'name': doc.name,  # 文档名称
-            'md_content':doc.pre_content, # 文档内容
-            'parent_doc':doc.parent_doc, # 上级文档
+            'id': doc.id,  # 手册ID
+            'name': doc.name,  # 手册名称
+            'md_content':doc.pre_content, # 手册内容
+            'parent_doc':doc.parent_doc, # 上级手册
             'top_doc':doc.top_doc, # 所属文集
-            'status':doc.status, # 文档状态
-            'create_time': doc.create_time,  # 文档创建时间
-            'modify_time': doc.modify_time,  # 文档的修改时间
-            'create_user': doc.create_user.username  # 文档的创建者
+            'status':doc.status, # 手册状态
+            'create_time': doc.create_time,  # 手册创建时间
+            'modify_time': doc.modify_time,  # 手册的修改时间
+            'create_user': doc.create_user.username  # 手册的创建者
         }
         return JsonResponse({'status': True, 'data': item})
     except ObjectDoesNotExist:
@@ -212,7 +212,7 @@ def create_project(request):
         return JsonResponse({'status':False,'data':'系统异常'})
 
 
-# 新建文档
+# 新建手册
 @require_http_methods(['GET','POST'])
 @csrf_exempt
 def create_doc(request):
@@ -226,11 +226,11 @@ def create_doc(request):
         token = UserToken.objects.get(token=token)
         # 文集是否属于用户
         is_project = Project.objects.filter(create_user=token.user,id=project_id)
-        # 新建文档
+        # 新建手册
         if is_project.exists():
             Doc.objects.create(
-                name = doc_title, # 文档内容
-                pre_content = doc_content, # 文档的编辑内容，意即编辑框输入的内容
+                name = doc_title, # 手册内容
+                pre_content = doc_content, # 手册的编辑内容，意即编辑框输入的内容
                 top_doc = project_id, # 所属文集
                 editor_mode = editor_mode, # 编辑器模式
                 create_user = token.user # 创建的用户
@@ -241,7 +241,7 @@ def create_doc(request):
     except ObjectDoesNotExist:
         return JsonResponse({'status': False, 'data': 'token无效'})
     except:
-        logger.exception("token创建文档异常")
+        logger.exception("token创建手册异常")
         return JsonResponse({'status':False,'data':'系统异常'})
 
 
