@@ -142,7 +142,7 @@
                     <div class="layui-input-inline" style="width: inherit;">
                         <a href="{% url 'doc_search' %}?q={{kw}}&d_range={{d_range}}" class="search_type" id="search_doc"><i class="layui-icon layui-icon-search"></i>{% trans "文档" %}</a>
                         <a href="{% url 'search' %}?kw={{kw}}&type=pro&d_range={{d_range}}" class="search_type" id="search_project"><i class="layui-icon layui-icon-list"></i>{% trans "文集" %}</a>
-                        <a href="{% url 'search' %}?kw={{kw}}&type=tag&d_range={{d_range}}" class="search_type" id="search_tag"><i class="layui-icon layui-icon-note"></i>{% trans "标签" %}</a>
+                        <!-- <a href="{% url 'search' %}?kw={{kw}}&type=tag&d_range={{d_range}}" class="search_type" id="search_tag"><i class="layui-icon layui-icon-note"></i>{% trans "标签" %}</a> -->
                     </div>
                 </div>
                 <!-- 筛选结束 -->
@@ -338,13 +338,13 @@
             if('{{ search_type }}' == 'doc'){
                 $('#search_doc').addClass('current_search_type')
                 $('#search_project').removeClass('current_search_type')
-                $('#search_tag').removeClass('current_search_type')
+                // $('#search_tag').removeClass('current_search_type')
             }else if('{{ search_type }}' == 'pro'){
                 $('#search_project').addClass('current_search_type')
                 $('#search_doc').removeClass('current_search_type')
-                $('#search_tag').removeClass('current_search_type')
+                // $('#search_tag').removeClass('current_search_type')
             }else if('{{ search_type }}' == 'tag'){
-                $('#search_tag').addClass('current_search_type')
+                // $('#search_tag').addClass('current_search_type')
                 $('#search_doc').removeClass('current_search_type')
                 $('#search_project').removeClass('current_search_type')
             }
