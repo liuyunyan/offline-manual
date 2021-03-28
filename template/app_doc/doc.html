@@ -95,9 +95,9 @@
     </span>
 
     {% if request.user == doc.create_user or request.user.is_superuser %}
-    <button class="doc-bottom-btn" tooltip="{% trans '下载手册' %}" id="download_doc">
+    <!-- <button class="doc-bottom-btn" tooltip="{% trans '下载手册' %}" id="download_doc">
         <i class="fa fa-download"></i> {% trans "下载手册" %}
-    </button>
+    </button> -->
     {% endif %}
 </div>
 
