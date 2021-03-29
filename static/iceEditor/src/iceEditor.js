@@ -738,21 +738,21 @@ ice.editor.prototype.menuHTML=function(){
 			}
 		}
 	});
-	// //添加音乐
-	// this.createMenu({title:'添加音乐',name:'music',icon:'music',id:this.musicId,popup:{width:320,height:80,title:'添加音乐',content:'<div class="iceEditor-music"><label>音乐链接：</label><input type="text" id="'+this.musicInputId+'" class="iceEditor-link" placeholder="链接地址" value=""/><a href="javascript:;" class="iceEditor-btn">确定</a></div>'},
-	// 	success:function(e,z){
-	// 		z.music = z.id(z.musicId);
-	// 		z.musicInput = z.id(z.musicInputId);
-	// 		z.music.getElementsByClassName('iceEditor-btn')[0].onclick = function(){
-	// 			var a = z.c('audio');
-	// 			a.src=z.musicInput.value;
-	// 			a.controls='controls';
-	// 			z.setHTML(a,true);
-	// 			z.music.getElementsByClassName('iceEditor-popup')[0].style.display='none';
-	// 			z.pd();
-	// 		}
-	// 	}
-	// });
+	//添加音乐
+	this.createMenu({title:'添加音乐',name:'music',icon:'music',id:this.musicId,popup:{width:320,height:80,title:'添加音乐',content:'<div class="iceEditor-music"><label>音乐链接：</label><input type="text" id="'+this.musicInputId+'" class="iceEditor-link" placeholder="链接地址" value=""/><a href="javascript:;" class="iceEditor-btn">确定</a></div>'},
+		success:function(e,z){
+			z.music = z.id(z.musicId);
+			z.musicInput = z.id(z.musicInputId);
+			z.music.getElementsByClassName('iceEditor-btn')[0].onclick = function(){
+				var a = z.c('audio');
+				a.src=z.musicInput.value;
+				a.controls='controls';
+				z.setHTML(a,true);
+				z.music.getElementsByClassName('iceEditor-popup')[0].style.display='none';
+				z.pd();
+			}
+		}
+	});
 	//附件上传
 	this.createMenu({title:'附件上传',name:'files',icon:'files',id:this.filesId,popup:{width:320,height:200,title:'附件上传',content:'<div class="iceEditor-insertImage"><input type="file" class="iceEditor-uploadInput" id="'+this.filesUploadId+'" name="file[]" multiple/><div><svg class="iceEditor-icon iceEditor-uploadIcon" aria-hidden="true"><use xlink:href="#icon-files"></use></svg></div><label for="'+this.filesUploadId+'" class="iceEditor-uploadBtn">点击上传附件</label></div>'},
 		success:function(e,z){
@@ -856,67 +856,67 @@ ice.editor.prototype.menuHTML=function(){
 			}
 		}
 	});
-	// //添加视频
-	// this.createMenu({title:'添加视频',name:'video',icon:'video',id:this.videoId,popup:{width:320,height:170,title:'添加视频',content:'<div class="iceEditor-video"><div><label>默认支持bilibili、优酷</label></div><div>URL：<input type="text" class="iceEditor-videoUrl" placeholder="网络图片地址" value=""/></div><div><label>宽：</label><input type="text" class="iceEditor-inputWidth" placeholder="px" value=""/><label>高：</label><input type="text" class="iceEditor-inputHeight" placeholder="px" value=""/><a href="javascript:;" class="iceEditor-btn">确定</a></div></div>'},
-	// 	success:function(e,z){
-	// 		z.video = z.id(z.videoId);
-	// 		var type;
-	// 		var close = z.video.getElementsByClassName('iceEditor-popup')[0];
-	// 		var url = z.video.getElementsByClassName('iceEditor-videoUrl')[0];
-	// 		var width = z.video.getElementsByClassName('iceEditor-inputWidth')[0];
-	// 		var height = z.video.getElementsByClassName('iceEditor-inputHeight')[0];
-	// 		var btn = z.video.getElementsByClassName('iceEditor-btn')[0];
-	// 		btn.onclick=function(){
-	// 			if(!url.value.length) return alert('视频地址不能为空');
-	// 			var v = z.c('iframe');
-	// 			v.width=width.value.length?width.value:510;
-	// 			v.height=height.value.length?height.value:498;
-	// 			v.setAttribute('frameborder',0);
-	// 			v.setAttribute('allowfullscreen',true);
-	// 			var error = '抱歉，无法处理该链接！';
-	// 			var domain = /^http(s)?:\/\/(.*?)\//.exec(url.value)	// 正则出域名
-	// 			if (domain.length == 3) {
-	// 				if (domain[2] == 'www.bilibili.com' || domain[2] == 'bilibili.com' ) {	// bilibili
-	// 					//源地址：https://www.bilibili.com/video/BV1UZ4y1g7De?spm_id_from=333.851.b_7265706f7274466972737431.11
-	// 					//处理地址：https://player.bilibili.com/player.html?bvid=BV1UZ4y1g7De
-	// 					id = /video\/(.*?)\?/g.exec(url.value)
-	// 					if (!id) {
-	// 						id = /video\/(.*)/g.exec(url.value)
-	// 					}
-	// 					v.src='https://player.bilibili.com/player.html?bvid='+id[1];
-	// 				} else if (domain[2] == 'v.youku.com') {	// youku
-	// 					//源地址：https://v.youku.com/v_show/id_XNTAwOTI4MzUxNg==.html
-	// 					//处理地址：https://player.youku.com/embed/XMjM0ODA3NjIw
-	// 					var id = url.value.split('.html');
-	// 					if(id.length>1){
-	// 						id = id[0].split('id_');
-	// 						if(id.length>1 && id[1].length){
-	// 							v.src='https://player.youku.com/embed/'+id[1];
-	// 						}else{
-	// 							return alert('优酷：'+error);
-	// 						}
-	// 					} else {
-	// 						return alert('优酷：'+error);
-	// 					}
-	// 				} else if (domain[2] == 'www.ixigua.com') {	//西瓜视频
-	// 					id = /[0-9]{6,}/g.exec(url.value)
-	// 					v.src='https://www.ixigua.com/iframe/'+id[0];
-	// 				} else {
-	// 					v = z.c('video');
-	// 					v.src=url.value;
-	// 					v.width=width.value.length?width.value:510;
-	// 					v.height=height.value.length?height.value:498;
-	// 					v.controls='controls';
-	// 				}
-	// 			} else {
-	// 				return alert('URL地址不合法！');
-	// 			}
-	// 			z.setHTML(v,true);
-	// 			close.style.display='none';
-	// 			z.pd();
-	// 		}
-	// 	}
-	// });
+	//添加视频
+	this.createMenu({title:'添加视频',name:'video',icon:'video',id:this.videoId,popup:{width:320,height:170,title:'添加视频',content:'<div class="iceEditor-video"><div><label>默认支持bilibili、优酷</label></div><div>URL：<input type="text" class="iceEditor-videoUrl" placeholder="网络图片地址" value=""/></div><div><label>宽：</label><input type="text" class="iceEditor-inputWidth" placeholder="px" value=""/><label>高：</label><input type="text" class="iceEditor-inputHeight" placeholder="px" value=""/><a href="javascript:;" class="iceEditor-btn">确定</a></div></div>'},
+		success:function(e,z){
+			z.video = z.id(z.videoId);
+			var type;
+			var close = z.video.getElementsByClassName('iceEditor-popup')[0];
+			var url = z.video.getElementsByClassName('iceEditor-videoUrl')[0];
+			var width = z.video.getElementsByClassName('iceEditor-inputWidth')[0];
+			var height = z.video.getElementsByClassName('iceEditor-inputHeight')[0];
+			var btn = z.video.getElementsByClassName('iceEditor-btn')[0];
+			btn.onclick=function(){
+				if(!url.value.length) return alert('视频地址不能为空');
+				var v = z.c('iframe');
+				v.width=width.value.length?width.value:510;
+				v.height=height.value.length?height.value:498;
+				v.setAttribute('frameborder',0);
+				v.setAttribute('allowfullscreen',true);
+				var error = '抱歉，无法处理该链接！';
+				var domain = /^http(s)?:\/\/(.*?)\//.exec(url.value)	// 正则出域名
+				if (domain.length == 3) {
+					if (domain[2] == 'www.bilibili.com' || domain[2] == 'bilibili.com' ) {	// bilibili
+						//源地址：https://www.bilibili.com/video/BV1UZ4y1g7De?spm_id_from=333.851.b_7265706f7274466972737431.11
+						//处理地址：https://player.bilibili.com/player.html?bvid=BV1UZ4y1g7De
+						id = /video\/(.*?)\?/g.exec(url.value)
+						if (!id) {
+							id = /video\/(.*)/g.exec(url.value)
+						}
+						v.src='https://player.bilibili.com/player.html?bvid='+id[1];
+					} else if (domain[2] == 'v.youku.com') {	// youku
+						//源地址：https://v.youku.com/v_show/id_XNTAwOTI4MzUxNg==.html
+						//处理地址：https://player.youku.com/embed/XMjM0ODA3NjIw
+						var id = url.value.split('.html');
+						if(id.length>1){
+							id = id[0].split('id_');
+							if(id.length>1 && id[1].length){
+								v.src='https://player.youku.com/embed/'+id[1];
+							}else{
+								return alert('优酷：'+error);
+							}
+						} else {
+							return alert('优酷：'+error);
+						}
+					} else if (domain[2] == 'www.ixigua.com') {	//西瓜视频
+						id = /[0-9]{6,}/g.exec(url.value)
+						v.src='https://www.ixigua.com/iframe/'+id[0];
+					} else {
+						v = z.c('video');
+						v.src=url.value;
+						v.width=width.value.length?width.value:510;
+						v.height=height.value.length?height.value:498;
+						v.controls='controls';
+					}
+				} else {
+					return alert('URL地址不合法！');
+				}
+				z.setHTML(v,true);
+				close.style.display='none';
+				z.pd();
+			}
+		}
+	});
 	//窗口最大化
 	this.createMenu({title:'最大化',name:'max',icon:'max',data:'max',css:'iceEditor-maxWindow'});
 	//窗口最小化
